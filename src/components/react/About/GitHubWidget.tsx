@@ -19,13 +19,24 @@ export default function GitHubWidget({ username }: { username: string }) {
         const res = await fetch(`https://api.github.com/users/${username}/events/public`);
         if (res.ok) {
           const events: GitHubEvent[] = await res.json();
-          // Find the last PushEvent
-          const pushEvent = events.find(e => e.type === 'PushEvent');
-          if (pushEvent && pushEvent.payload.commits && pushEvent.payload.commits.length > 0) {
+          // Find the last PushEvent that actually contains commits
+          const pushEvent = events.find(e => 
+            e.type === 'PushEvent' && 
+            e.payload.commits && 
+            e.payload.commits.length > 0
+          );
+          if (pushEvent && pushEvent.payload.commits) {
             setLastCommit({
               message: pushEvent.payload.commits[pushEvent.payload.commits.length - 1].message,
               repo: pushEvent.repo.name,
               date: new Date(pushEvent.created_at).toLocaleDateString()
+            });
+          } else {
+            // Fallback if they have events but no recent commits
+            setLastCommit({
+              message: "No recent commits",
+              repo: "Kyoronginus",
+              date: new Date().toLocaleDateString()
             });
           }
         }

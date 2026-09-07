@@ -105,6 +105,8 @@ h2 {
 .about-left {
   display: flex;
   flex-direction: column;
+  width: 220px;
+  flex-shrink: 0;
 }
 .profile-icon {
   width: 100px;

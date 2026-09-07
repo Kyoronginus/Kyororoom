@@ -4,6 +4,9 @@ import SpotifyWidget from "../react/About/SpotifyWidget.tsx";
 import DiscordWidget from "../react/About/DiscordWidget.tsx";
 import GitHubWidget from "../react/About/GitHubWidget.tsx";
 import "./AboutSection.css";
+
+const discordId = import.meta.env.DISCORD_ID;
+
 ---
 
 <section id="about" class="about-section">
@@ -16,10 +19,10 @@ import "./AboutSection.css";
         <SpotifyWidget client:load />
       </div>
       <div class="mt-0">
-        <DiscordWidget client:load discordId="YOUR_DISCORD_ID" />
+        <DiscordWidget client:load discordId={discordId} />
       </div>
       <div class="mt-0">
-        <GitHubWidget client:load username="tohrudjunaedisato" />
+        <GitHubWidget client:load username="Kyoronginus" />
       </div>
     </div>
     <div class="about-right">
