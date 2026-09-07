@@ -4,6 +4,7 @@ import MorphingTopo from "../components/react/Background/MorphingTopo.tsx";
 import Ticker from "../components/react/Hero/Ticker.tsx";
 import HeroCarousel from "../components/react/Hero/HeroCarousel.tsx";
 import AboutSection from "../components/astro/AboutSection.astro";
+import MediaBanner from "../components/astro/MediaBanner.astro";
 import VisitorCounter from "../components/react/Contact/VisitorCounter.tsx";
 ---
 
@@ -38,6 +39,13 @@ import VisitorCounter from "../components/react/Contact/VisitorCounter.tsx";
     </section>
 
     <main>
+       <div class="banner-container flex md:flex-row gap-1">
+        <MediaBanner type="image" src="/Assets/Hero/Video/Uchinoko Kawaii.gif" alt="Animated Banner" />
+        <MediaBanner type="image" src="/Assets/Hero/Etc/idolized.png" alt="Static Banner" />
+        <MediaBanner type="image" src="/Assets/Hero/Video/oekakusa.gif" alt="Animated Banner" />
+        <!-- <MediaBanner type="image" src="/Assets/Hero/Etc/oekakusa.png" alt="Static Banner" /> -->
+       </div>
+
       <!-- ABOUT -->
       <AboutSection />
 

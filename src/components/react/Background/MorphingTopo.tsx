@@ -82,7 +82,7 @@ const fragmentShaderSource = `
     // Base color: #fafafa (RGB: 250/255 = 0.98, 0.98, 0.98)
     vec3 bgColor = vec3(0.98, 0.98, 0.98);
     // Line color: faint gray/blue (RGB: 0.85, 0.88, 0.9)
-    vec3 lineColor = vec3(0.88, 0.93, 0.93);
+    vec3 lineColor = vec3(0.95, 0.95, 0.95);
     
     vec3 color = mix(bgColor, lineColor, line);
     

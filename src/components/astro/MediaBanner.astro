@@ -1,0 +1,46 @@
+---
+// src/components/astro/MediaBanner.astro
+export interface Props {
+  type: 'video' | 'image';
+  src: string;
+  alt?: string;
+}
+
+const { type, src, alt = "Media Banner" } = Astro.props;
+---
+<section class="media-banner-section">
+  {type === 'video' ? (
+    <video 
+      class="media-banner"
+      src={src} 
+      autoplay 
+      loop 
+      muted 
+      playsinline
+    ></video>
+  ) : (
+    <img 
+      class="media-banner"
+      src={src} 
+      alt={alt}
+    />
+  )}
+</section>
+
+<style>
+  .media-banner-section {
+    width: 30%;
+    border: 1px #d1d1d1 solid;
+    overflow: hidden;
+    /* Optional: add some gap or margin if needed, e.g., margin-right: 20px; */
+  }
+  
+  .media-banner {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    max-height: 150px; 
+    background-color: #eaeaea; 
+  }
+</style>

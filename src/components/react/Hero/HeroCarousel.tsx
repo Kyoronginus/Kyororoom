@@ -2,14 +2,14 @@ import React, { useRef, useState } from 'react';
 import './HeroCarousel.css';
 
 const images = [
-    "public/Assets/Hero/6.png",
-    "public/Assets/Hero/7.png",
-    "public/Assets/Hero/8.png",
-    "public/Assets/Hero/1.png",
-    "public/Assets/Hero/2.png",
-    "public/Assets/Hero/3.png",
-    "public/Assets/Hero/4.png",
-    "public/Assets/Hero/5.png",
+    "public/Assets/Hero/Carousel/6.png",
+    "public/Assets/Hero/Carousel/7.png",
+    "public/Assets/Hero/Carousel/8.png",
+    "public/Assets/Hero/Carousel/1.png",
+    "public/Assets/Hero/Carousel/2.png",
+    "public/Assets/Hero/Carousel/3.png",
+    "public/Assets/Hero/Carousel/4.png",
+    "public/Assets/Hero/Carousel/5.png",
 ];
 
 export default function HeroCarousel() {
