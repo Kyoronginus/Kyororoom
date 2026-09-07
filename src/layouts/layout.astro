@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import Navbar from "../components/astro/Navbar.astro";
+import MorphingTopo from "../components/react/Background/MorphingTopo.tsx";
 
 interface Props {
     title: string;
@@ -18,9 +19,10 @@ const { title } = Astro.props;
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <title>{title}</title>
     </head>
-    <body class="bg-spotify-base text-spotify-textMain font-sans antialiased">
-        <!-- ここにあとでNavbarが入ります -->
+    <body class="bg-transparent text-spotify-textMain font-sans antialiased">
+        <MorphingTopo client:only="react" />
         
+        <!-- ここにあとでNavbarが入ります -->
         <Navbar />
         <slot />
     </body>

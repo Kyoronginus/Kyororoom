@@ -25,22 +25,6 @@
         color: #fff;
     }
 
-    .about-bg {
-      position: absolute;
-      top: 0;
-      left: calc(50% - 50vw);
-      width: 100vw;
-      height: 100%;
-      background-image: url('/Assets/About/oc_monochrome.png');
-      background-size: cover;
-      background-position: center;
-      opacity: 0.20;
-      z-index: -1;
-      /* Top and bottom fade effect */
-      mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
-      -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
-      pointer-events: none;
-    }
 
     .about-right .name {
       margin-top: 0;

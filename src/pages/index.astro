@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import MorphingTopo from "../components/react/Background/MorphingTopo.tsx";
 import Ticker from "../components/react/Hero/Ticker.tsx";
 import HeroCarousel from "../components/react/Hero/HeroCarousel.tsx";
 import AboutSection from "../components/astro/AboutSection.astro";
@@ -13,6 +14,7 @@ import VisitorCounter from "../components/react/Contact/VisitorCounter.tsx";
     <title>kyororoom</title>
   </head>
   <body>
+    <MorphingTopo client:only="react" />
     <!-- Navbar -->
     <nav class="navbar">
       <div class="logo">
