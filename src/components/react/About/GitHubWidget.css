@@ -1,0 +1,55 @@
+.github-widget {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.github-header {
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #333;
+  font-weight: bold;
+}
+
+.github-icon {
+  background: #333;
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.github-body {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.commit-message {
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-style: italic;
+}
+
+.commit-repo {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.github-loading {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}

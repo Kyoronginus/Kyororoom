@@ -1,0 +1,20 @@
+.visitor-counter {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 20px;
+  /* Font defaults to body font (DotGothic16) */
+}
+
+.counter-label {
+  font-size: 0.8rem;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  color: #666;
+}
+
+.counter-display {
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+}

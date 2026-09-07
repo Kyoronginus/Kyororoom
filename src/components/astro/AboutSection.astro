@@ -1,0 +1,65 @@
+---
+// src/components/astro/AboutSection.astro
+import SpotifyWidget from "../react/About/SpotifyWidget.tsx";
+import DiscordWidget from "../react/About/DiscordWidget.tsx";
+import GitHubWidget from "../react/About/GitHubWidget.tsx";
+import "./AboutSection.css";
+---
+
+<section id="about" class="about-section">
+  <div class="about-bg"></div>
+  <h1>ABOUT</h1>
+  <div class="about-grid">
+    <div class="about-left">
+      <div class="profile-icon"></div>
+      <button class="badge-btn">COMMISSION: OPEN</button>
+      <div class="mt-4">
+        <SpotifyWidget client:load />
+      </div>
+      <div class="mt-0">
+        <DiscordWidget client:load discordId="YOUR_DISCORD_ID" />
+      </div>
+      <div class="mt-0">
+        <GitHubWidget client:load username="tohrudjunaedisato" />
+      </div>
+    </div>
+    <div class="about-right">
+      <h3 class="name">PROFILE</h3>
+      <p class="intro-text">
+        Hi, I'm Kyoronginus! This is my tiny personal website, thanks for
+        visiting. 
+        <br>
+        <br>
+        I love doing creative stuffs as my hobby. Digital drawing is most of the
+        part, but I also enjoy random things like coding and 3D modeling when I
+        feel like it (yeah just call me jack of all trades but don't with master of
+        none). Some quick facts about me:
+      </p>
+
+      <p class="intro-text">
+
+      </p>
+
+      <p class="intro-text">
+        <ul>
+          <li>
+            I'm Japanese-Indonesian. Born in Japan, but currently living in
+            Indonesia.
+          </li>
+          <li>
+            Japanese is my native language, but I also speak Indonesian and
+            English.
+          </li>
+          <li>I'm a Computer Science Bachelor Undergraduate student.</li>
+          <li>Everyone calls me Kyoro, and you can call me the same!</li>
+          <li>
+            I'm a night owl. My brain works best at night, so I usually stay up
+            late when I'm available to do so. But the modern society these days doesn't allow
+            me to do so everyday so I'm cooked
+          </li>
+          <li>I use Clip Studio Paint Pro and Wacom Intuos CTL-4100WL for drawing.</li>
+        </ul>
+      </p>
+    </div>
+  </div>
+</section>

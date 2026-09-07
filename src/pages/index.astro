@@ -1,17 +1,110 @@
 ---
-
+import "../styles/global.css";
+import Ticker from "../components/react/Hero/Ticker.tsx";
+import HeroCarousel from "../components/react/Hero/HeroCarousel.tsx";
+import AboutSection from "../components/astro/AboutSection.astro";
+import VisitorCounter from "../components/react/Contact/VisitorCounter.tsx";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>kyororoom</title>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="logo">
+        <h2 class="my-0">KYOROROOM</h2>
+      </div>
+      <div class="nav-links">
+        <a href="#works">WORKS</a>
+        <a href="#about">ABOUT</a>
+        <a href="#blog">BLOG</a>
+        <a href="#projects">PROJECTS</a>
+        <a href="#contact">CONTACT</a>
+      </div>
+    </nav>
+
+    <!-- TICKER (流れる掲示板) -->
+    <Ticker client:load />
+
+    <!-- HOME (横スクロールギャラリー) -->
+    <section id="home">
+      <HeroCarousel client:load />
+    </section>
+
+    <main>
+      <!-- ABOUT -->
+      <AboutSection />
+
+      <!-- BLOG -->
+      <section id="blog">
+        <h1>BLOG (PATREON?)</h1>
+        <div class="blog-list">
+          <div class="blog-item">
+            <span class="date">2026.6.1</span>
+            <div class="blog-thumb"></div>
+            <span class="title">Blog post title...</span>
+            <span class="arrow">-></span>
+          </div>
+          <div class="blog-item">
+            <span class="date">2026.5.20</span>
+            <div class="blog-thumb"></div>
+            <span class="title">Another post...</span>
+            <span class="arrow">-></span>
+          </div>
+          <div class="view-more">
+            <a href="#">VIEW MORE</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- WORKS -->
+      <section id="works">
+        <h1>WORKS</h1>
+        <div class="works-grid">
+          <div class="work-item"></div>
+          <div class="work-item"></div>
+          <div class="work-item"></div>
+          <div class="work-item"></div>
+          <div class="work-item"></div>
+          <div class="work-item"></div>
+          <div class="work-item"></div>
+          <div class="work-item"></div>
+        </div>
+      </section>
+
+      <!-- PROJECTS -->
+      <section id="projects">
+        <h1>PROJECTS</h1>
+        <div class="projects-grid">
+          <div class="project-item">UCHINOKO KAWAII</div>
+          <div class="project-item">
+            FIBONACCI <span class="arrow">-></span>
+          </div>
+          <div class="project-item">OEKAKUSA</div>
+          <div class="project-item">... <span class="arrow">-></span></div>
+        </div>
+      </section>
+
+      <!-- CONTACTS -->
+      <section id="contacts">
+        <h1>CONTACTS</h1>
+        <div class="contact-links">
+          <div class="social-icon">X</div>
+          <div class="social-icon">Discord server</div>
+        </div>
+        <div class="contact-badges">
+          <button class="badge-btn">OC Gallery</button>
+          <button class="badge-btn">...</button>
+          <button class="badge-btn">...</button>
+        </div>
+        <div style="margin-top: 2rem; display: flex; ">
+          <VisitorCounter client:load />
+        </div>
+      </section>
+    </main>
+  </body>
 </html>

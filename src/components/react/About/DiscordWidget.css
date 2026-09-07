@@ -1,0 +1,45 @@
+.discord-widget {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.discord-header {
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  background: #747f8d;
+}
+
+.discord-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.status-text {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.activity-text {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

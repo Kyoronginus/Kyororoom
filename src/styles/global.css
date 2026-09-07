@@ -1,1 +1,207 @@
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
 @import "tailwindcss";
+
+/* src/styles/global.css */
+/* シンプルなワイヤーフレーム用のCSS (Tailwind不使用) */
+body {
+  font-family: 'DotGothic16', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #fafafa;
+  color: #333;
+}
+
+main {
+  max-width: 1400px; /* 端近くまで広げる */
+  width: 95%; /* 画面幅の95%を使い、左右に少しだけ余白を残す */
+  margin: 0 auto;
+  padding: 20px 0; /* 左右の固定パディングを削除 */
+}
+
+.section {
+  margin-bottom: 60px;
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+}
+
+/* Restore browser default heading and list styles reset by Tailwind */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
+h1 { font-size: 2em; margin: 0.67em 0; }
+h3 { font-size: 1.17em; margin: 1em 0; }
+h4 { font-size: 1em; margin: 1.33em 0; }
+h5 { font-size: 0.83em; margin: 1.67em 0; }
+h6 { font-size: 0.67em; margin: 2.33em 0; }
+
+ul {
+  list-style-type: disc;
+  padding-left: 40px;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+ol {
+  list-style-type: decimal;
+  padding-left: 40px;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+h2 {
+  font-size: 1.2rem;
+  color: #666;
+  text-transform: uppercase;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  z-index: 100;
+}
+.logo {
+  font-weight: bold;
+}
+.nav-links a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #333;
+}
+
+/* HOME */
+.hero-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 400px;
+}
+.hero-image-placeholder {
+  flex-grow: 1;
+  height: 100%;
+  background: #eee;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 20px;
+}
+.nav-btn {
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+/* ABOUT */
+.about-grid {
+  display: flex;
+  gap: 30px;
+}
+.about-left {
+  display: flex;
+  flex-direction: column;
+}
+.profile-icon {
+  width: 100px;
+  height: 100px;
+  background: #eee;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.widget {
+  border: 1px solid #ccc;
+  padding: 10px;
+
+  background: #fff;
+}
+.badge-btn {
+  padding: 5px 10px;
+  background: #fff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* BLOG */
+.blog-list {
+  display: flex;
+  flex-direction: column;
+}
+.blog-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+.blog-thumb {
+  width: 50px;
+  height: 50px;
+  background: #ccc;
+  border: 1px solid #bbb;
+}
+.title {
+  flex-grow: 1;
+}
+.view-more {
+  margin-top: 15px;
+  text-align: right;
+}
+.view-more a {
+  color: #333;
+}
+
+/* WORKS */
+.works-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.work-item {
+  aspect-ratio: 1;
+  background: #eee;
+  border: 1px solid #ccc;
+}
+
+/* PROJECTS */
+.projects-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.project-item {
+  height: 100px;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+/* CONTACTS */
+.contact-links {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.social-icon {
+  width: 80px;
+  height: 80px;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+.contact-badges {
+  display: flex;
+  gap: 10px;
+}

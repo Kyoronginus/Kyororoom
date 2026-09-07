@@ -1,0 +1,30 @@
+/* src/components/react/Ticker.css */
+.ticker-wrapper {
+  width: 100%;
+  overflow: hidden;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+  /* background: #fff; */
+  /* border-bottom: 1px solid #ddd; */
+}
+
+.ticker-content {
+  display: inline-block;
+  /* 20秒かけて左に移動。ループを滑らかにするため、全幅の半分(50%)移動したら元に戻す */
+  animation: ticker 40s linear infinite;
+}
+
+.ticker-content span {
+  margin-right: 10rem;
+  color: #333;
+}
+
+.ticker-content .star {
+  color: #999;
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
