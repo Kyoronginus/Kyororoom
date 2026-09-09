@@ -6,6 +6,12 @@ import HeroCarousel from "../components/react/Hero/HeroCarousel.tsx";
 import AboutSection from "../components/astro/AboutSection.astro";
 import MediaBanner from "../components/astro/MediaBanner.astro";
 import VisitorCounter from "../components/react/Contact/VisitorCounter.tsx";
+import PatreonBlog from "../components/react/Blog/PatreonBlog.tsx";
+import PatronTicker from "../components/react/Hero/PatronTicker.tsx";
+import { fetchLatestPosts, fetchActiveMembers } from "../lib/patreon";
+
+const initialPosts = await fetchLatestPosts();
+const initialMembers = await fetchActiveMembers();
 ---
 
 <!doctype html>
@@ -33,6 +39,7 @@ import VisitorCounter from "../components/react/Contact/VisitorCounter.tsx";
     <!-- TICKER (流れる掲示板) -->
     <Ticker client:load />
 
+
     <!-- HOME (横スクロールギャラリー) -->
     <section id="home">
       <HeroCarousel client:load />
@@ -49,26 +56,13 @@ import VisitorCounter from "../components/react/Contact/VisitorCounter.tsx";
       <!-- ABOUT -->
       <AboutSection />
 
+
       <!-- BLOG -->
       <section id="blog">
-        <h1>BLOG (PATREON?)</h1>
-        <div class="blog-list">
-          <div class="blog-item">
-            <span class="date">2026.6.1</span>
-            <div class="blog-thumb"></div>
-            <span class="title">Blog post title...</span>
-            <span class="arrow">-></span>
-          </div>
-          <div class="blog-item">
-            <span class="date">2026.5.20</span>
-            <div class="blog-thumb"></div>
-            <span class="title">Another post...</span>
-            <span class="arrow">-></span>
-          </div>
-          <div class="view-more">
-            <a href="#">VIEW MORE</a>
-          </div>
-        </div>
+        <h1>BLOG</h1>
+        <!-- PATREON TICKER -->
+        <PatronTicker client:load initialMembers={initialMembers} />
+        <PatreonBlog client:load initialPosts={initialPosts} />
       </section>
 
       <!-- WORKS -->

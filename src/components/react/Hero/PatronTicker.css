@@ -1,0 +1,50 @@
+.patron-ticker-wrapper {
+  width: 100%;
+  overflow: hidden;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+  border-top: 1px dashed #dcdcdc;
+  border-bottom: 1px dashed #dcdcdc;
+  padding: 5px 0;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.patron-ticker-wrapper:hover .patron-ticker-content {
+  animation-play-state: paused;
+}
+
+.patron-ticker-content {
+  display: inline-block;
+  animation: patron-ticker-scroll 100s linear infinite;
+}
+
+.patron-ticker-item {
+  display: inline-block;
+  margin-right: 0.5rem;
+  color: #444;
+}
+
+.patron-badge {
+  font-weight: bold;
+  color: #ff0000;
+  margin-right: 0.75rem;
+}
+
+.patron-paid {
+  color: #f35656;
+  font-weight: bold;
+}
+
+.patron-free {
+  color: #000000;
+}
+
+@keyframes patron-ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}

@@ -21,8 +21,6 @@ const { title } = Astro.props;
     </head>
     <body class="bg-transparent text-spotify-textMain font-sans antialiased">
         <MorphingTopo client:only="react" />
-        
-        <!-- ここにあとでNavbarが入ります -->
         <Navbar />
         <slot />
     </body>

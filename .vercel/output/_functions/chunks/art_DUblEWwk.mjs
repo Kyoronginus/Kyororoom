@@ -1,7 +1,7 @@
 import { t as __exportAll } from "./rolldown-runtime_D7D4PA-g.mjs";
 //#region src/pages/api/art.ts
 var art_exports = /* @__PURE__ */ __exportAll({ GET: () => GET });
-var API_URL = `https://us-central1-oekakusa.cloudfunctions.net/api/users/NC9InoxB7HdZY6zSiKkNjaOc5Lc2/commits/latest`;
+var API_URL = "https://us-central1-oekakusa.cloudfunctions.net/api/users/NC9InoxB7HdZY6zSiKkNjaOc5Lc2/commits/latest";
 var cachedData = null;
 var cacheExpiresAt = 0;
 var CACHE_TTL_MS = 9e5;

@@ -1,6 +1,7 @@
 import { t as __exportAll } from "./rolldown-runtime_D7D4PA-g.mjs";
 import { d as renderHead, f as addAttribute, i as renderComponent, l as renderTemplate, u as maybeRenderHead, y as createAstro } from "./server_C-PK2OEm.mjs";
 import { t as createComponent } from "./compiler_zyFMNQyq.mjs";
+import { n as fetchLatestPosts, t as fetchActiveMembers } from "./patreon_Hbi_VkYZ.mjs";
 import { useEffect, useRef, useState } from "react";
 import { Fragment as Fragment$1, jsx, jsxs } from "react/jsx-runtime";
 //#region src/components/react/Hero/Ticker.tsx
@@ -469,13 +470,190 @@ function VisitorCounter() {
 	});
 }
 //#endregion
+//#region src/components/react/Blog/PatreonBlog.tsx
+function PatreonBlog({ initialPosts }) {
+	const [posts, setPosts] = useState(initialPosts && initialPosts.length > 0 ? initialPosts : []);
+	const [loading, setLoading] = useState(initialPosts && initialPosts.length > 0 ? false : true);
+	const [imgErrors, setImgErrors] = useState({});
+	useEffect(() => {
+		try {
+			[
+				"kyororoom_patreon_posts_cache",
+				"kyororoom_patreon_posts_v2",
+				"kyororoom_patreon_posts_v3",
+				"kyororoom_patreon_posts_v4",
+				"kyororoom_patreon_posts_v5"
+			].forEach((k) => localStorage.removeItem(k));
+		} catch {}
+		if (initialPosts && initialPosts.length > 0) return;
+		const fetchPosts = async () => {
+			try {
+				const res = await fetch("/api/patreon/posts");
+				if (res.ok) {
+					const data = await res.json();
+					if (Array.isArray(data) && data.length > 0) setPosts(data.slice(0, 3));
+				}
+			} catch (err) {
+				console.error("Failed to load Patreon posts:", err);
+			} finally {
+				setLoading(false);
+			}
+		};
+		fetchPosts();
+	}, [initialPosts]);
+	if (loading && posts.length === 0) return /* @__PURE__ */ jsx("div", {
+		className: "blog-list",
+		children: [
+			1,
+			2,
+			3
+		].map((n) => /* @__PURE__ */ jsxs("div", {
+			className: "blog-item",
+			style: { opacity: .5 },
+			children: [
+				/* @__PURE__ */ jsx("span", {
+					className: "blog-date",
+					children: "Loading..."
+				}),
+				/* @__PURE__ */ jsx("div", {
+					className: "blog-thumb",
+					children: /* @__PURE__ */ jsx("div", { className: "blog-thumb-placeholder" })
+				}),
+				/* @__PURE__ */ jsx("span", {
+					className: "blog-title",
+					children: "Loading post information..."
+				}),
+				/* @__PURE__ */ jsx("span", {
+					className: "blog-arrow",
+					children: "->"
+				})
+			]
+		}, n))
+	});
+	return /* @__PURE__ */ jsxs("div", {
+		className: "blog-list",
+		children: [posts.map((post) => {
+			const hasValidThumbnail = Boolean(post.thumbnail && !imgErrors[post.id]);
+			return /* @__PURE__ */ jsxs("a", {
+				href: post.url,
+				target: "_blank",
+				rel: "noopener noreferrer",
+				className: "blog-item",
+				children: [
+					/* @__PURE__ */ jsx("span", {
+						className: "blog-date",
+						children: post.date
+					}),
+					/* @__PURE__ */ jsx("div", {
+						className: "blog-thumb",
+						children: hasValidThumbnail ? /* @__PURE__ */ jsx("img", {
+							src: post.thumbnail,
+							alt: "",
+							className: "blog-thumb-img",
+							referrerPolicy: "no-referrer",
+							loading: "lazy",
+							onError: () => setImgErrors((prev) => ({
+								...prev,
+								[post.id]: true
+							}))
+						}) : /* @__PURE__ */ jsx("div", {
+							className: "blog-thumb-placeholder",
+							children: /* @__PURE__ */ jsx("span", {
+								className: "blog-thumb-icon",
+								children: "P"
+							})
+						})
+					}),
+					/* @__PURE__ */ jsx("span", {
+						className: "blog-title",
+						children: post.title
+					}),
+					/* @__PURE__ */ jsx("span", {
+						className: "blog-arrow",
+						children: "->"
+					})
+				]
+			}, post.id);
+		}), /* @__PURE__ */ jsx("div", {
+			className: "view-more",
+			children: /* @__PURE__ */ jsx("a", {
+				href: "https://www.patreon.com/c/Kyoronginus",
+				target: "_blank",
+				rel: "noopener noreferrer",
+				children: "VIEW MORE"
+			})
+		})]
+	});
+}
+//#endregion
+//#region src/components/react/Hero/PatronTicker.tsx
+function PatronTicker({ initialMembers }) {
+	const [members, setMembers] = useState(initialMembers && initialMembers.length > 0 ? initialMembers : []);
+	useEffect(() => {
+		try {
+			[
+				"kyororoom_patreon_members_cache",
+				"kyororoom_patreon_members_v2",
+				"kyororoom_patreon_members_v3",
+				"kyororoom_patreon_members_v4"
+			].forEach((k) => localStorage.removeItem(k));
+		} catch {}
+		if (initialMembers && initialMembers.length > 0) return;
+		const fetchMembers = async () => {
+			try {
+				const res = await fetch("/api/patreon/members");
+				if (res.ok) {
+					const data = await res.json();
+					if (Array.isArray(data.members) && data.members.length > 0) setMembers(data.members);
+				}
+			} catch (err) {
+				console.error("Failed to load Patreon members for ticker:", err);
+			}
+		};
+		fetchMembers();
+	}, [initialMembers]);
+	if (members.length === 0) return null;
+	const singleLoop = [{
+		type: "badge",
+		label: "THANK YOU MY PATRONS:"
+	}, ...members.map((m) => ({
+		type: "member",
+		name: m.name,
+		isPaid: m.isPaid
+	}))];
+	const tickerItems = [
+		...singleLoop,
+		...singleLoop,
+		...singleLoop,
+		...singleLoop
+	];
+	return /* @__PURE__ */ jsx("div", {
+		className: "patron-ticker-wrapper",
+		children: /* @__PURE__ */ jsx("div", {
+			className: "patron-ticker-content",
+			children: tickerItems.map((item, idx) => /* @__PURE__ */ jsx("span", {
+				className: "patron-ticker-item",
+				children: item.type === "badge" ? /* @__PURE__ */ jsx("span", {
+					className: "patron-badge",
+					children: item.label
+				}) : /* @__PURE__ */ jsx("span", {
+					className: item.isPaid ? "patron-paid" : "patron-free",
+					children: item.name
+				})
+			}, idx))
+		})
+	});
+}
+//#endregion
 //#region src/pages/index.astro
 var pages_exports = /* @__PURE__ */ __exportAll({
 	default: () => $$Index,
 	file: () => $$file,
 	url: () => ""
 });
-var $$Index = createComponent(($$result, $$props, $$slots) => {
+var $$Index = createComponent(async ($$result, $$props, $$slots) => {
+	const initialPosts = await fetchLatestPosts();
+	const initialMembers = await fetchActiveMembers();
 	return renderTemplate`<html lang="ja"><head><meta charset="UTF-8"><title>kyororoom</title>${renderHead($$result)}</head><body>${renderComponent($$result, "MorphingTopo", null, {
 		"client:only": "react",
 		"client:component-hydration": "only",
@@ -503,7 +681,19 @@ var $$Index = createComponent(($$result, $$props, $$slots) => {
 		"type": "image",
 		"src": "/Assets/Hero/Video/oekakusa.gif",
 		"alt": "Animated Banner"
-	})}<!-- <MediaBanner type="image" src="/Assets/Hero/Etc/oekakusa.png" alt="Static Banner" /> --></div><!-- ABOUT -->${renderComponent($$result, "AboutSection", $$AboutSection, {})}<!-- BLOG --><section id="blog"><h1>BLOG (PATREON?)</h1><div class="blog-list"><div class="blog-item"><span class="date">2026.6.1</span><div class="blog-thumb"></div><span class="title">Blog post title...</span><span class="arrow">-></span></div><div class="blog-item"><span class="date">2026.5.20</span><div class="blog-thumb"></div><span class="title">Another post...</span><span class="arrow">-></span></div><div class="view-more"><a href="#">VIEW MORE</a></div></div></section><!-- WORKS --><section id="works"><h1>WORKS</h1><div class="works-grid"><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div></div></section><!-- PROJECTS --><section id="projects"><h1>PROJECTS</h1><div class="projects-grid"><div class="project-item">UCHINOKO KAWAII</div><div class="project-item">FIBONACCI <span class="arrow">-></span></div><div class="project-item">OEKAKUSA</div><div class="project-item">... <span class="arrow">-></span></div></div></section><!-- CONTACTS --><section id="contacts"><h1>CONTACTS</h1><div class="contact-links"><div class="social-icon">X</div><div class="social-icon">Discord server</div></div><div class="contact-badges"><button class="badge-btn">OC Gallery</button><button class="badge-btn">...</button><button class="badge-btn">...</button></div><div style="margin-top: 2rem; display: flex; ">${renderComponent($$result, "VisitorCounter", VisitorCounter, {
+	})}<!-- <MediaBanner type="image" src="/Assets/Hero/Etc/oekakusa.png" alt="Static Banner" /> --></div><!-- ABOUT -->${renderComponent($$result, "AboutSection", $$AboutSection, {})}<!-- BLOG --><section id="blog"><h1>BLOG</h1><!-- PATREON TICKER -->${renderComponent($$result, "PatronTicker", PatronTicker, {
+		"client:load": true,
+		"initialMembers": initialMembers,
+		"client:component-hydration": "load",
+		"client:component-path": "/Users/tohru/Documents/Programming/Kyororoom/src/components/react/Hero/PatronTicker.tsx",
+		"client:component-export": "default"
+	})}${renderComponent($$result, "PatreonBlog", PatreonBlog, {
+		"client:load": true,
+		"initialPosts": initialPosts,
+		"client:component-hydration": "load",
+		"client:component-path": "/Users/tohru/Documents/Programming/Kyororoom/src/components/react/Blog/PatreonBlog.tsx",
+		"client:component-export": "default"
+	})}</section><!-- WORKS --><section id="works"><h1>WORKS</h1><div class="works-grid"><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div></div></section><!-- PROJECTS --><section id="projects"><h1>PROJECTS</h1><div class="projects-grid"><div class="project-item">UCHINOKO KAWAII</div><div class="project-item">FIBONACCI <span class="arrow">-></span></div><div class="project-item">OEKAKUSA</div><div class="project-item">... <span class="arrow">-></span></div></div></section><!-- CONTACTS --><section id="contacts"><h1>CONTACTS</h1><div class="contact-links"><div class="social-icon">X</div><div class="social-icon">Discord server</div></div><div class="contact-badges"><button class="badge-btn">OC Gallery</button><button class="badge-btn">...</button><button class="badge-btn">...</button></div><div style="margin-top: 2rem; display: flex; ">${renderComponent($$result, "VisitorCounter", VisitorCounter, {
 		"client:load": true,
 		"client:component-hydration": "load",
 		"client:component-path": "/Users/tohru/Documents/Programming/Kyororoom/src/components/react/Contact/VisitorCounter.tsx",

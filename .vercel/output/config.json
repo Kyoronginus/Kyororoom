@@ -24,6 +24,14 @@
 			"dest": "_render"
 		},
 		{
+			"src": "^/api/patreon/members/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/api/patreon/posts/?$",
+			"dest": "_render"
+		},
+		{
 			"src": "^/api/patreon/?$",
 			"dest": "_render"
 		},
