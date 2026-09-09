@@ -19,12 +19,14 @@
   font-weight: bold;
 }
 
-.github-icon {
-  background: #333;
-  color: #fff;
-  font-size: 0.7rem;
-  padding: 2px 4px;
-  border-radius: 3px;
+.pixel-icon {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  display: inline-block;
+  flex-shrink: 0;
 }
 
 .github-body {
@@ -33,12 +35,18 @@
   overflow: hidden;
 }
 
-.commit-message {
-  font-size: 0.9rem;
-  white-space: nowrap;
+.commit-message-container {
   overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: relative;
+  width: 100%;
+}
+
+.commit-message {
+  display: inline-block;
+  font-size: 0.9rem;
   font-style: italic;
+  animation: scroll-left 10s linear infinite;
 }
 
 .commit-repo {
@@ -53,4 +61,9 @@
 .github-loading {
   font-size: 0.8rem;
   opacity: 0.7;
+}
+
+@keyframes scroll-left {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
 }

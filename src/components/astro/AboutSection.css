@@ -29,3 +29,9 @@
     .about-right .name {
       margin-top: 0;
     }
+
+    @media (max-width: 768px) {
+      .about-left {
+        display: none !important;
+      }
+    }

@@ -108,6 +108,11 @@ h2 {
   width: 220px;
   flex-shrink: 0;
 }
+@media (max-width: 768px) {
+  .about-left {
+    display: none;
+  }
+}
 .profile-icon {
   width: 100px;
   height: 100px;

@@ -40,8 +40,8 @@
 
 .hero-carousel-item img {
   width: auto;
-  height: 100%;
-  max-width: 90vw; /* 画面幅が狭い場合は縮小させる */
+  height: 400px;
+  max-width: none;
   object-fit: contain; 
   border: 1px solid #ddd;
   background: #eee;

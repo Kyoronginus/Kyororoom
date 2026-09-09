@@ -3,6 +3,7 @@
 import SpotifyWidget from "../react/About/SpotifyWidget.tsx";
 import DiscordWidget from "../react/About/DiscordWidget.tsx";
 import GitHubWidget from "../react/About/GitHubWidget.tsx";
+import ArtWidget from "../react/About/ArtWidget.tsx";
 import "./AboutSection.css";
 
 const discordId = import.meta.env.DISCORD_ID;
@@ -23,6 +24,9 @@ const discordId = import.meta.env.DISCORD_ID;
       </div>
       <div class="mt-0">
         <GitHubWidget client:load username="Kyoronginus" />
+      </div>
+      <div class="mt-0">
+        <ArtWidget client:load />
       </div>
     </div>
     <div class="about-right">

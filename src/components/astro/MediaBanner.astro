@@ -29,18 +29,18 @@ const { type, src, alt = "Media Banner" } = Astro.props;
 
 <style>
   .media-banner-section {
-    width: 30%;
+    width: 300px;
+    height: 110px;
+    flex: 0 0 auto;
     border: 1px #d1d1d1 solid;
     overflow: hidden;
-    /* Optional: add some gap or margin if needed, e.g., margin-right: 20px; */
   }
   
   .media-banner {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
     object-fit: cover;
-    max-height: 150px; 
     background-color: #eaeaea; 
   }
 </style>
