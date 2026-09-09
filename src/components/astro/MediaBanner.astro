@@ -4,28 +4,57 @@ export interface Props {
   type: 'video' | 'image';
   src: string;
   alt?: string;
+  href?: string;
+  target?: string;
 }
 
-const { type, src, alt = "Media Banner" } = Astro.props;
+const { type, src, alt = "Media Banner", href, target = "_blank" } = Astro.props;
+const isExternal = Boolean(href && (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//')));
 ---
-<section class="media-banner-section">
-  {type === 'video' ? (
-    <video 
-      class="media-banner"
-      src={src} 
-      autoplay 
-      loop 
-      muted 
-      playsinline
-    ></video>
-  ) : (
-    <img 
-      class="media-banner"
-      src={src} 
-      alt={alt}
-    />
-  )}
-</section>
+{href ? (
+  <a
+    href={href}
+    target={isExternal ? target : undefined}
+    rel={isExternal ? "noopener noreferrer" : undefined}
+    class="media-banner-section"
+  >
+    {type === 'video' ? (
+      <video 
+        class="media-banner"
+        src={src} 
+        autoplay 
+        loop 
+        muted 
+        playsinline
+      ></video>
+    ) : (
+      <img 
+        class="media-banner"
+        src={src} 
+        alt={alt}
+      />
+    )}
+  </a>
+) : (
+  <div class="media-banner-section">
+    {type === 'video' ? (
+      <video 
+        class="media-banner"
+        src={src} 
+        autoplay 
+        loop 
+        muted 
+        playsinline
+      ></video>
+    ) : (
+      <img 
+        class="media-banner"
+        src={src} 
+        alt={alt}
+      />
+    )}
+  </div>
+)}
 
 <style>
   .media-banner-section {
@@ -34,8 +63,17 @@ const { type, src, alt = "Media Banner" } = Astro.props;
     flex: 0 0 auto;
     border: 1px #d1d1d1 solid;
     overflow: hidden;
+    display: block;
+    text-decoration: none;
+    transition: opacity 0.2s ease, border-color 0.2s ease;
   }
   
+  a.media-banner-section:hover {
+    opacity: 0.85;
+    border-color: #999;
+    cursor: pointer;
+  }
+
   .media-banner {
     width: 100%;
     height: 100%;

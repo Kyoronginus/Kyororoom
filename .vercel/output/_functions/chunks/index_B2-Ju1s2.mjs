@@ -1,7 +1,7 @@
 import { t as __exportAll } from "./rolldown-runtime_D7D4PA-g.mjs";
 import { d as renderHead, f as addAttribute, i as renderComponent, l as renderTemplate, u as maybeRenderHead, y as createAstro } from "./server_C-PK2OEm.mjs";
 import { t as createComponent } from "./compiler_zyFMNQyq.mjs";
-import { n as fetchLatestPosts, t as fetchActiveMembers } from "./patreon_Hbi_VkYZ.mjs";
+import { n as fetchLatestPosts, t as fetchActiveMembers } from "./patreon_D8nHdwTC.mjs";
 import { useEffect, useRef, useState } from "react";
 import { Fragment as Fragment$1, jsx, jsxs } from "react/jsx-runtime";
 //#region src/components/react/Hero/Ticker.tsx
@@ -407,7 +407,7 @@ function ArtWidget() {
 //#endregion
 //#region src/components/astro/AboutSection.astro
 var $$AboutSection = createComponent(($$result, $$props, $$slots) => {
-	return renderTemplate`${maybeRenderHead($$result)}<section id="about" class="about-section"><h1>ABOUT</h1><div class="about-grid"><div class="about-left"><div class="profile-icon"></div><button class="badge-btn">COMMISSION: OPEN</button><div class="mt-4">${renderComponent($$result, "SpotifyWidget", SpotifyWidget, {
+	return renderTemplate`${maybeRenderHead($$result)}<section id="about" class="about-section"><h1>ABOUT</h1><div class="about-grid"><div class="about-left"><div class="flex justify-center items-center gap-1"><div class="profile-icon"></div><div class="flex-col"><div><span style="font-style:italic">50% Artist, 50% Computer Science. But</span></div><div><span style="font-style:italic">master of none</span></div></div></div><button class="badge-btn">COMMISSION STATUS: OPEN</button><div class="mt-4">${renderComponent($$result, "SpotifyWidget", SpotifyWidget, {
 		"client:load": true,
 		"client:component-hydration": "load",
 		"client:component-path": "/Users/tohru/Documents/Programming/Kyororoom/src/components/react/About/SpotifyWidget.tsx",
@@ -437,8 +437,9 @@ createAstro("https://astro.build");
 var $$MediaBanner = createComponent(($$result, $$props, $$slots) => {
 	const Astro = $$result.createAstro($$props, $$slots);
 	Astro.self = $$MediaBanner;
-	const { type, src, alt = "Media Banner" } = Astro.props;
-	return renderTemplate`${maybeRenderHead($$result)}<section class="media-banner-section" data-astro-cid-jubjw5u7>${type === "video" ? renderTemplate`<video class="media-banner"${addAttribute(src, "src")} autoplay loop muted playsinline data-astro-cid-jubjw5u7></video>` : renderTemplate`<img class="media-banner"${addAttribute(src, "src")}${addAttribute(alt, "alt")} data-astro-cid-jubjw5u7>`}</section>`;
+	const { type, src, alt = "Media Banner", href, target = "_blank" } = Astro.props;
+	const isExternal = Boolean(href && (href.startsWith("http://") || href.startsWith("https://") || href.startsWith("//")));
+	return renderTemplate`${href ? renderTemplate`${maybeRenderHead($$result)}<a${addAttribute(href, "href")}${addAttribute(isExternal ? target : void 0, "target")}${addAttribute(isExternal ? "noopener noreferrer" : void 0, "rel")} class="media-banner-section" data-astro-cid-jubjw5u7>${type === "video" ? renderTemplate`<video class="media-banner"${addAttribute(src, "src")} autoplay loop muted playsinline data-astro-cid-jubjw5u7></video>` : renderTemplate`<img class="media-banner"${addAttribute(src, "src")}${addAttribute(alt, "alt")} data-astro-cid-jubjw5u7>`}</a>` : renderTemplate`<div class="media-banner-section" data-astro-cid-jubjw5u7>${type === "video" ? renderTemplate`<video class="media-banner"${addAttribute(src, "src")} autoplay loop muted playsinline data-astro-cid-jubjw5u7></video>` : renderTemplate`<img class="media-banner"${addAttribute(src, "src")}${addAttribute(alt, "alt")} data-astro-cid-jubjw5u7>`}</div>`}`;
 }, "/Users/tohru/Documents/Programming/Kyororoom/src/components/astro/MediaBanner.astro", void 0);
 //#endregion
 //#region src/components/react/Contact/VisitorCounter.tsx
@@ -659,7 +660,7 @@ var $$Index = createComponent(async ($$result, $$props, $$slots) => {
 		"client:component-hydration": "only",
 		"client:component-path": "/Users/tohru/Documents/Programming/Kyororoom/src/components/react/Background/MorphingTopo.tsx",
 		"client:component-export": "default"
-	})}<!-- Navbar --><nav class="navbar"><div class="logo"><h2 class="my-0">KYOROROOM</h2></div><div class="nav-links"><a href="#works">WORKS</a><a href="#about">ABOUT</a><a href="#blog">BLOG</a><a href="#projects">PROJECTS</a><a href="#contact">CONTACT</a></div></nav><!-- TICKER (流れる掲示板) -->${renderComponent($$result, "Ticker", Ticker, {
+	})}<!-- Navbar --><nav class="navbar"><div class="logo"><h2 class="my-0"><a href="#home">KYOROROOM</a></h2></div><div class="nav-links"><a href="#about">ABOUT</a><a href="#blog">BLOG</a><a href="#works">WORKS</a><a href="#projects">PROJECTS</a><a href="#contact">CONTACT</a></div></nav><!-- TICKER (流れる掲示板) -->${renderComponent($$result, "Ticker", Ticker, {
 		"client:load": true,
 		"client:component-hydration": "load",
 		"client:component-path": "/Users/tohru/Documents/Programming/Kyororoom/src/components/react/Hero/Ticker.tsx",
@@ -672,7 +673,8 @@ var $$Index = createComponent(async ($$result, $$props, $$slots) => {
 	})}</section><main><div class="banner-container flex flex-wrap gap-2">${renderComponent($$result, "MediaBanner", $$MediaBanner, {
 		"type": "image",
 		"src": "/Assets/Hero/Video/Uchinoko Kawaii.gif",
-		"alt": "Animated Banner"
+		"alt": "Animated Banner",
+		"href": "https://uchinokokawaii.netlify.app"
 	})}${renderComponent($$result, "MediaBanner", $$MediaBanner, {
 		"type": "image",
 		"src": "/Assets/Hero/Etc/idolized.png",

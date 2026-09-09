@@ -25,12 +25,14 @@ const initialMembers = await fetchActiveMembers();
     <!-- Navbar -->
     <nav class="navbar">
       <div class="logo">
-        <h2 class="my-0">KYOROROOM</h2>
+        <h2 class="my-0">
+          <a href="#home">KYOROROOM</a>
+        </h2>
       </div>
       <div class="nav-links">
-        <a href="#works">WORKS</a>
         <a href="#about">ABOUT</a>
         <a href="#blog">BLOG</a>
+        <a href="#works">WORKS</a>
         <a href="#projects">PROJECTS</a>
         <a href="#contact">CONTACT</a>
       </div>
@@ -47,9 +49,9 @@ const initialMembers = await fetchActiveMembers();
 
     <main>
        <div class="banner-container flex flex-wrap gap-2">
-        <MediaBanner type="image" src="/Assets/Hero/Video/Uchinoko Kawaii.gif" alt="Animated Banner" />
+        <MediaBanner type="image" src="/Assets/Hero/Video/Uchinoko Kawaii.gif" alt="Animated Banner" href="https://uchinokokawaii.netlify.app"/>
         <MediaBanner type="image" src="/Assets/Hero/Etc/idolized.png" alt="Static Banner" />
-        <MediaBanner type="image" src="/Assets/Hero/Video/oekakusa.gif" alt="Animated Banner" />
+        <MediaBanner type="image" src="/Assets/Hero/Video/oekakusa.gif" alt="Animated Banner" href="https://github.com/Kyoronginus/oekakusa" />
         <!-- <MediaBanner type="image" src="/Assets/Hero/Etc/oekakusa.png" alt="Static Banner" /> -->
        </div>
 

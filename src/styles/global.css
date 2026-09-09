@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
 @import "tailwindcss";
 
+:root {
+  --section-title-size: 4.75rem; /* Customize section title size here */
+}
+
 /* src/styles/global.css */
 /* シンプルなワイヤーフレーム用のCSS (Tailwind不使用) */
 body {
@@ -27,7 +31,10 @@ main {
 h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
 }
-h1 { font-size: 2em; margin: 0.67em 0; }
+h1 {
+  font-size: var(--section-title-size);
+  margin: 0.5em 0;
+}
 h3 { font-size: 1.17em; margin: 1em 0; }
 h4 { font-size: 1em; margin: 1.33em 0; }
 h5 { font-size: 0.83em; margin: 1.67em 0; }

@@ -32,11 +32,11 @@
 			"dest": "_render"
 		},
 		{
-			"src": "^/api/patreon/?$",
+			"src": "^/api/spotify/?$",
 			"dest": "_render"
 		},
 		{
-			"src": "^/api/spotify/?$",
+			"src": "^/api/ticker/?$",
 			"dest": "_render"
 		},
 		{

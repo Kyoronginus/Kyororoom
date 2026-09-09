@@ -106,7 +106,7 @@ async function fetchActiveMembers() {
 	if (!token) return [];
 	const campaignId = await getPatreonCampaignId(token);
 	if (!campaignId) return [];
-	const res = await fetchWithPatreonAuth(`${PATREON_API_BASE}/campaigns/${campaignId}/members?include=user&fields[member]=patron_status,full_name&fields[user]=full_name,vanity&filter[is_active]=true`);
+	const res = await fetchWithPatreonAuth(`${PATREON_API_BASE}/campaigns/${campaignId}/members?page[count]=100&include=user&fields[member]=patron_status,full_name&fields[user]=full_name,vanity&filter[is_active]=true`);
 	if (!res || !res.ok) return [];
 	const json = await res.json();
 	const activeMembers = [];
