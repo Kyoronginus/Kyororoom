@@ -31,8 +31,124 @@
       margin-top: 0;
     }
 
+    .about-grid {
+      align-items: flex-start;
+      transition: gap 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .about-right {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .about-left {
+      position: sticky;
+      top: 90px;
+      width: 220px;
+      flex-shrink: 0;
+      opacity: 1;
+      transform: translateX(0);
+      visibility: visible;
+      transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.25s ease,
+                  transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                  visibility 0.35s ease;
+    }
+
     @media (max-width: 768px) {
-      .about-left {
-        display: none !important;
+      .about-grid {
+        gap: 0;
       }
+
+      .about-left {
+        width: 0;
+        opacity: 0;
+        transform: translateX(-30px);
+        visibility: hidden;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .about-left > * {
+        width: 220px;
+        flex-shrink: 0;
+      }
+    }
+
+    .oc-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .oc-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+    }
+
+    .oc-card {
+      border: 1px solid #ccc;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .oc-card:hover {
+      border-color: #888;
+    }
+
+    .oc-image-placeholder {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid #e0e0e0;
+      overflow: hidden;
+    }
+
+    .oc-image {
+
+    }
+
+    .oc-image-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .oc-info {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .oc-name {
+      font-weight: bold;
+      font-size: 0.95rem;
+      color: #222;
+      letter-spacing: 0.02em;
+    }
+
+    .oc-tag {
+      font-size: 0.75rem;
+      color: #666;
+      letter-spacing: 0.05em;
+    }
+
+    .oc-desc {
+      font-size: 0.82rem;
+      color: #555;
+      margin: 6px 0 0 0;
+      line-height: 1.4;
     }

@@ -1,4 +1,4 @@
-/* src/components/react/HeroCarousel.css */
+/* src/components/react/Hero/HeroCarousel.css */
 .hero-carousel-container {
   width: 100%;
   padding: 20px 0;
@@ -11,46 +11,42 @@
   gap: 10px;
   overflow-x: auto;
   cursor: grab;
-  
-  /* 横スクロールした時に、画像が中央でピタッと止まるようにする(CSS Scroll Snap) */
   scroll-snap-type: x mandatory;
-  padding: 0 40px; /* 両端の余白 */
-  
-  /* デフォルトのスクロールバーを隠す (見た目をスッキリさせるため) */
-  -ms-overflow-style: none;  
-  scrollbar-width: none;  
+  padding: 0 40px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  user-select: none;
 }
 
-.hero-carousel-track:active, .hero-carousel-track.active {
+.hero-carousel-track:active,
+.hero-carousel-track.active {
   cursor: grabbing;
 }
 
-.hero-carousel-track::-webkit-scrollbar { 
+.hero-carousel-track::-webkit-scrollbar {
   display: none;
 }
 
 .hero-carousel-item {
-  flex: 0 0 auto; /* 縮小させず、自然な幅を保つ */
-  width: auto; /* 画像のアスペクト比に合わせて幅を自動調整 */
+  flex: 0 0 auto;
+  width: auto;
   height: 400px;
-  
-  /* スクロール時にこの要素の中央でピタッと止まる */
-  scroll-snap-align: center; 
+  scroll-snap-align: center;
+  cursor: pointer;
 }
 
 .hero-carousel-item img {
   width: auto;
   height: 400px;
   max-width: none;
-  object-fit: contain; 
+  object-fit: contain;
   border: 1px solid #ddd;
   background: #eee;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease, filter 0.3s ease;
-  /* ほんのり影をつけて立体感を出す */
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  display: block;
 }
 
-/* ホバー時のアニメーション（solaniさんのサイトのような少しのリッチさ） */
 .hero-carousel-item:hover img {
   transform: scale(1.02);
 }

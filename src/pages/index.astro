@@ -41,7 +41,6 @@ const initialMembers = await fetchActiveMembers();
     <!-- TICKER (流れる掲示板) -->
     <Ticker client:load />
 
-
     <!-- HOME (横スクロールギャラリー) -->
     <section id="home">
       <HeroCarousel client:load />
@@ -59,14 +58,7 @@ const initialMembers = await fetchActiveMembers();
       <AboutSection />
 
 
-      <!-- BLOG -->
-      <section id="blog">
-        <h1>BLOG</h1>
-        <!-- PATREON TICKER -->
-        <PatronTicker client:load initialMembers={initialMembers} />
-        <PatreonBlog client:load initialPosts={initialPosts} />
-      </section>
-
+      
       <!-- WORKS -->
       <section id="works">
         <h1>WORKS</h1>
@@ -81,10 +73,17 @@ const initialMembers = await fetchActiveMembers();
           <div class="work-item"></div>
         </div>
       </section>
-
+      <!-- BLOG -->
+      <section id="blog">
+        <h1>BLOG</h1>
+        <!-- PATREON TICKER -->
+        <PatronTicker client:load initialMembers={initialMembers} />
+        <PatreonBlog client:load initialPosts={initialPosts} />
+      </section>
+      
       <!-- PROJECTS -->
       <section id="projects">
-        <h1>PROJECTS</h1>
+        <!-- <h1>PROJECTS</h1>
         <div class="projects-grid">
           <div class="project-item">UCHINOKO KAWAII</div>
           <div class="project-item">
@@ -92,7 +91,7 @@ const initialMembers = await fetchActiveMembers();
           </div>
           <div class="project-item">OEKAKUSA</div>
           <div class="project-item">... <span class="arrow">-></span></div>
-        </div>
+        </div> -->
       </section>
 
       <!-- CONTACTS -->

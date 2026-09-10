@@ -1,0 +1,29 @@
+---
+
+//src
+
+export interface Props {
+    name: string;
+    tag?: string;
+    desc?: string;
+    src?: string;
+    alt?: string;
+}
+
+const { name, tag, desc, src, alt } = Astro.props;
+---
+
+<div class="oc-card">
+  {src ? (
+    <img src={src} alt={alt} class="oc-image" loading="lazy" />
+  ) : (
+    <div class="oc-image-placeholder">
+      <span>[ {name.toUpperCase()} ]</span>
+    </div>
+  )}
+  <div class="oc-info">
+    <div class="oc-name">{name}</div>
+    {tag && <div class="oc-tag">{tag}</div>}
+    {desc && <p class="oc-desc">{desc}</p>}
+  </div>
+</div>

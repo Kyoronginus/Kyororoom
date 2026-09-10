@@ -2,7 +2,7 @@ import { t as __exportAll } from "./rolldown-runtime_D7D4PA-g.mjs";
 import { d as renderHead, f as addAttribute, i as renderComponent, l as renderTemplate, u as maybeRenderHead, y as createAstro } from "./server_C-PK2OEm.mjs";
 import { t as createComponent } from "./compiler_zyFMNQyq.mjs";
 import { n as fetchLatestPosts, t as fetchActiveMembers } from "./patreon_D8nHdwTC.mjs";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Fragment as Fragment$1, jsx, jsxs } from "react/jsx-runtime";
 //#region src/components/react/Hero/Ticker.tsx
 function Ticker() {
@@ -39,55 +39,123 @@ function Ticker() {
 //#endregion
 //#region src/components/react/Hero/HeroCarousel.tsx
 var images = [
-	"public/Assets/Hero/Carousel/6.png",
-	"public/Assets/Hero/Carousel/7.png",
-	"public/Assets/Hero/Carousel/8.png",
-	"public/Assets/Hero/Carousel/1.png",
-	"public/Assets/Hero/Carousel/2.png",
-	"public/Assets/Hero/Carousel/3.png",
-	"public/Assets/Hero/Carousel/4.png",
-	"public/Assets/Hero/Carousel/5.png"
+	"/Assets/Hero/Carousel/6.png",
+	"/Assets/Hero/Carousel/7.png",
+	"/Assets/Hero/Carousel/8.png",
+	"/Assets/Hero/Carousel/1.png",
+	"/Assets/Hero/Carousel/2.png",
+	"/Assets/Hero/Carousel/3.png",
+	"/Assets/Hero/Carousel/4.png",
+	"/Assets/Hero/Carousel/5.png"
+];
+var TRIPLE_IMAGES = [
+	...images,
+	...images,
+	...images
 ];
 function HeroCarousel() {
 	const trackRef = useRef(null);
 	const [isDown, setIsDown] = useState(false);
-	const [startX, setStartX] = useState(0);
-	const [scrollLeft, setScrollLeft] = useState(0);
+	const startXRef = useRef(0);
+	const scrollStartRef = useRef(0);
+	const hasDraggedRef = useRef(false);
+	const isAdjustingRef = useRef(false);
+	const initScrollPosition = useCallback(() => {
+		const track = trackRef.current;
+		if (!track || images.length === 0) return;
+		const items = track.querySelectorAll(".hero-carousel-item");
+		if (items.length >= images.length * 2) {
+			const singleSetWidth = items[images.length].offsetLeft - items[0].offsetLeft;
+			if (singleSetWidth > 0) track.scrollLeft = singleSetWidth;
+		}
+	}, []);
+	useEffect(() => {
+		initScrollPosition();
+		const timer = setTimeout(initScrollPosition, 150);
+		window.addEventListener("resize", initScrollPosition);
+		return () => {
+			clearTimeout(timer);
+			window.removeEventListener("resize", initScrollPosition);
+		};
+	}, [initScrollPosition]);
+	const handleScroll = () => {
+		if (isAdjustingRef.current) return;
+		const track = trackRef.current;
+		if (!track || images.length === 0) return;
+		const items = track.querySelectorAll(".hero-carousel-item");
+		if (items.length < images.length * 2) return;
+		const singleSetWidth = items[images.length].offsetLeft - items[0].offsetLeft;
+		if (singleSetWidth <= 0) return;
+		if (track.scrollLeft >= singleSetWidth * 2) {
+			isAdjustingRef.current = true;
+			track.scrollLeft -= singleSetWidth;
+			requestAnimationFrame(() => {
+				isAdjustingRef.current = false;
+			});
+		} else if (track.scrollLeft <= singleSetWidth * .15) {
+			isAdjustingRef.current = true;
+			track.scrollLeft += singleSetWidth;
+			requestAnimationFrame(() => {
+				isAdjustingRef.current = false;
+			});
+		}
+	};
 	const handleMouseDown = (e) => {
-		if (!trackRef.current) return;
+		const track = trackRef.current;
+		if (!track) return;
 		setIsDown(true);
-		trackRef.current.classList.add("active");
-		setStartX(e.pageX - trackRef.current.offsetLeft);
-		setScrollLeft(trackRef.current.scrollLeft);
-	};
-	const handleMouseLeave = () => {
-		setIsDown(false);
-		if (trackRef.current) trackRef.current.classList.remove("active");
-	};
-	const handleMouseUp = () => {
-		setIsDown(false);
-		if (trackRef.current) trackRef.current.classList.remove("active");
+		hasDraggedRef.current = false;
+		startXRef.current = e.pageX;
+		scrollStartRef.current = track.scrollLeft;
+		track.style.scrollSnapType = "none";
+		track.classList.add("active");
 	};
 	const handleMouseMove = (e) => {
 		if (!isDown || !trackRef.current) return;
 		e.preventDefault();
-		const walk = (e.pageX - trackRef.current.offsetLeft - startX) * 2;
-		trackRef.current.scrollLeft = scrollLeft - walk;
+		const diff = e.pageX - startXRef.current;
+		if (Math.abs(diff) > 5) hasDraggedRef.current = true;
+		trackRef.current.scrollLeft = scrollStartRef.current - diff * 1.5;
+	};
+	const handleMouseUp = () => {
+		if (!isDown) return;
+		setIsDown(false);
+		const track = trackRef.current;
+		if (track) {
+			track.classList.remove("active");
+			track.style.scrollSnapType = "x mandatory";
+		}
+	};
+	const handleItemClick = (e) => {
+		if (hasDraggedRef.current) {
+			e.preventDefault();
+			return;
+		}
+		const item = e.currentTarget;
+		const track = trackRef.current;
+		if (!track) return;
+		const target = item.offsetLeft + item.offsetWidth / 2 - track.clientWidth / 2;
+		track.scrollTo({
+			left: target,
+			behavior: "smooth"
+		});
 	};
 	return /* @__PURE__ */ jsx("div", {
 		className: "hero-carousel-container",
 		children: /* @__PURE__ */ jsx("div", {
 			className: "hero-carousel-track",
 			ref: trackRef,
+			onScroll: handleScroll,
 			onMouseDown: handleMouseDown,
-			onMouseLeave: handleMouseLeave,
-			onMouseUp: handleMouseUp,
 			onMouseMove: handleMouseMove,
-			children: images.map((src, index) => /* @__PURE__ */ jsx("div", {
+			onMouseUp: handleMouseUp,
+			onMouseLeave: handleMouseUp,
+			children: TRIPLE_IMAGES.map((src, index) => /* @__PURE__ */ jsx("div", {
 				className: "hero-carousel-item",
+				onClick: handleItemClick,
 				children: /* @__PURE__ */ jsx("img", {
 					src,
-					alt: `Artwork ${index}`,
+					alt: `Artwork ${index % images.length + 1}`,
 					draggable: "false"
 				})
 			}, index))
@@ -405,6 +473,15 @@ function ArtWidget() {
 	});
 }
 //#endregion
+//#region src/components/astro/OcCard.astro
+createAstro("https://astro.build");
+var $$OcCard = createComponent(($$result, $$props, $$slots) => {
+	const Astro = $$result.createAstro($$props, $$slots);
+	Astro.self = $$OcCard;
+	const { name, tag, desc, src, alt } = Astro.props;
+	return renderTemplate`${maybeRenderHead($$result)}<div class="oc-card">${src ? renderTemplate`<img${addAttribute(src, "src")}${addAttribute(alt, "alt")} class="oc-image" loading="lazy">` : renderTemplate`<div class="oc-image-placeholder"><span>[ ${name.toUpperCase()} ]</span></div>`}<div class="oc-info"><div class="oc-name">${name}</div>${tag && renderTemplate`<div class="oc-tag">${tag}</div>`}${desc && renderTemplate`<p class="oc-desc">${desc}</p>`}</div></div>`;
+}, "/Users/tohru/Documents/Programming/Kyororoom/src/components/astro/OcCard.astro", void 0);
+//#endregion
 //#region src/components/astro/AboutSection.astro
 var $$AboutSection = createComponent(($$result, $$props, $$slots) => {
 	return renderTemplate`${maybeRenderHead($$result)}<section id="about" class="about-section"><h1>ABOUT</h1><div class="about-grid"><div class="about-left"><div class="flex justify-center items-center gap-1"><div class="profile-icon"></div><div class="flex-col"><div><span style="font-style:italic">50% Artist, 50% Computer Science. But</span></div><div><span style="font-style:italic">master of none</span></div></div></div><button class="badge-btn">COMMISSION STATUS: OPEN</button><div class="mt-4">${renderComponent($$result, "SpotifyWidget", SpotifyWidget, {
@@ -429,7 +506,25 @@ var $$AboutSection = createComponent(($$result, $$props, $$slots) => {
 		"client:component-hydration": "load",
 		"client:component-path": "/Users/tohru/Documents/Programming/Kyororoom/src/components/react/About/ArtWidget.tsx",
 		"client:component-export": "default"
-	})}</div></div><div class="about-right"><h3 class="name">PROFILE</h3><p class="intro-text">Hi, I'm Kyoronginus! This is my tiny personal website, thanks for visiting.<br><br>I love doing creative stuffs as my hobby. Digital drawing is most of the part, but I also enjoy random things like coding and 3D modeling when I feel like it (yeah just call me jack of all trades but don't with master of none). Some quick facts about me:</p><p class="intro-text"></p><p class="intro-text"><ul><li>I'm Japanese-Indonesian. Born in Japan, but currently living in Indonesia.</li><li>Japanese is my native language, but I also speak Indonesian and English.</li><li>I'm a Computer Science Bachelor Undergraduate student.</li><li>Everyone calls me Kyoro, and you can call me the same!</li><li>I'm a night owl. My brain works best at night, so I usually stay up late when I'm available to do so. But the modern society these days doesn't allow me to do so everyday so I'm cooked</li><li>I use Clip Studio Paint Pro and Wacom Intuos CTL-4100WL for drawing.</li></ul></p></div></div></section>`;
+	})}</div></div><div class="about-right"><h3 class="name">PROFILE</h3><p class="intro-text">Hi, I'm Kyoronginus! This is my tiny personal website, thanks for visiting.<br><br>I love doing creative stuffs as my hobby. Digital drawing is most of the part, but I also enjoy random things like coding and 3D modeling when I feel like it (yeah just call me jack of all trades but don't with master of none). Some quick facts about me:</p><p class="intro-text"></p><p class="intro-text"><ul><li>I'm Japanese-Indonesian. Born in Japan, but currently living in Indonesia.</li><li>Japanese is my native language, but I also speak Indonesian and English.</li><li>I'm a Computer Science Bachelor Undergraduate student.</li><li>Everyone calls me Kyoro, and you can call me the same!</li><li>I'm a night owl. My brain works best at night, so I usually stay up late when I'm available to do so. But since modern society refuses to run on night-owl time so I'm cooked</li><li>I use Clip Studio Paint Pro and Wacom Intuos CTL-4100WL for drawing.</li></ul></p><h3 class="name">OCs</h3><p>Heyy take a look at my OCs</p><div class="oc-grid">${renderComponent($$result, "OcCard", $$OcCard, {
+		"name": "Venna",
+		"tag": "Dreamy shorty gaki",
+		"desc": "Most belovedd",
+		"src": "/Assets/About/OCs/venna-1.png",
+		"alt": "Venna"
+	})}${renderComponent($$result, "OcCard", $$OcCard, {
+		"name": "Agnia",
+		"tag": "",
+		"desc": "omw creating a game with her as the MC!!!",
+		"src": "/Assets/About/OCs/agnia-1.png",
+		"alt": "Agnia"
+	})}${renderComponent($$result, "OcCard", $$OcCard, {
+		"name": "Still anonymous",
+		"tag": "",
+		"desc": "<- her younger bro",
+		"src": "/Assets/About/OCs/agamenon-1.png",
+		"alt": "Agamenon"
+	})}</div></div></div></section>`;
 }, "/Users/tohru/Documents/Programming/Kyororoom/src/components/astro/AboutSection.astro", void 0);
 //#endregion
 //#region src/components/astro/MediaBanner.astro
@@ -682,8 +777,9 @@ var $$Index = createComponent(async ($$result, $$props, $$slots) => {
 	})}${renderComponent($$result, "MediaBanner", $$MediaBanner, {
 		"type": "image",
 		"src": "/Assets/Hero/Video/oekakusa.gif",
-		"alt": "Animated Banner"
-	})}<!-- <MediaBanner type="image" src="/Assets/Hero/Etc/oekakusa.png" alt="Static Banner" /> --></div><!-- ABOUT -->${renderComponent($$result, "AboutSection", $$AboutSection, {})}<!-- BLOG --><section id="blog"><h1>BLOG</h1><!-- PATREON TICKER -->${renderComponent($$result, "PatronTicker", PatronTicker, {
+		"alt": "Animated Banner",
+		"href": "https://github.com/Kyoronginus/oekakusa"
+	})}<!-- <MediaBanner type="image" src="/Assets/Hero/Etc/oekakusa.png" alt="Static Banner" /> --></div><!-- ABOUT -->${renderComponent($$result, "AboutSection", $$AboutSection, {})}<!-- WORKS --><section id="works"><h1>WORKS</h1><div class="works-grid"><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div></div></section><!-- BLOG --><section id="blog"><h1>BLOG</h1><!-- PATREON TICKER -->${renderComponent($$result, "PatronTicker", PatronTicker, {
 		"client:load": true,
 		"initialMembers": initialMembers,
 		"client:component-hydration": "load",
@@ -695,7 +791,15 @@ var $$Index = createComponent(async ($$result, $$props, $$slots) => {
 		"client:component-hydration": "load",
 		"client:component-path": "/Users/tohru/Documents/Programming/Kyororoom/src/components/react/Blog/PatreonBlog.tsx",
 		"client:component-export": "default"
-	})}</section><!-- WORKS --><section id="works"><h1>WORKS</h1><div class="works-grid"><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div><div class="work-item"></div></div></section><!-- PROJECTS --><section id="projects"><h1>PROJECTS</h1><div class="projects-grid"><div class="project-item">UCHINOKO KAWAII</div><div class="project-item">FIBONACCI <span class="arrow">-></span></div><div class="project-item">OEKAKUSA</div><div class="project-item">... <span class="arrow">-></span></div></div></section><!-- CONTACTS --><section id="contacts"><h1>CONTACTS</h1><div class="contact-links"><div class="social-icon">X</div><div class="social-icon">Discord server</div></div><div class="contact-badges"><button class="badge-btn">OC Gallery</button><button class="badge-btn">...</button><button class="badge-btn">...</button></div><div style="margin-top: 2rem; display: flex; ">${renderComponent($$result, "VisitorCounter", VisitorCounter, {
+	})}</section><!-- PROJECTS --><section id="projects"><!-- <h1>PROJECTS</h1>
+        <div class="projects-grid">
+          <div class="project-item">UCHINOKO KAWAII</div>
+          <div class="project-item">
+            FIBONACCI <span class="arrow">-></span>
+          </div>
+          <div class="project-item">OEKAKUSA</div>
+          <div class="project-item">... <span class="arrow">-></span></div>
+        </div> --></section><!-- CONTACTS --><section id="contacts"><h1>CONTACTS</h1><div class="contact-links"><div class="social-icon">X</div><div class="social-icon">Discord server</div></div><div class="contact-badges"><button class="badge-btn">OC Gallery</button><button class="badge-btn">...</button><button class="badge-btn">...</button></div><div style="margin-top: 2rem; display: flex; ">${renderComponent($$result, "VisitorCounter", VisitorCounter, {
 		"client:load": true,
 		"client:component-hydration": "load",
 		"client:component-path": "/Users/tohru/Documents/Programming/Kyororoom/src/components/react/Contact/VisitorCounter.tsx",
