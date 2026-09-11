@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import SmoothScroll from "../components/common/SmoothScroll.astro";
 import MorphingTopo from "../components/common/MorphingTopo.tsx";
 import Ticker from "../components/hero/Ticker.tsx";
 import HeroCarousel from "../components/hero/HeroCarousel.tsx";
@@ -41,6 +42,7 @@ const initialTickerData = {
   </head>
 
   <body>
+    <SmoothScroll />
     <MorphingTopo client:only="react" />
     <!-- Navbar -->
     <nav class="navbar">

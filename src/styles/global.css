@@ -1,11 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
 @import "tailwindcss";
+@import "lenis/dist/lenis.css";
 
 :root {
   --section-title-size: 3.75rem; /* Customize section title size here */
   --content-max-width: 1400px;
   --content-width: 95%;
   --content-padding-x: max(calc((100% - var(--content-width)) / 2), calc((100% - var(--content-max-width)) / 2));
+}
+
+section[id] {
+  scroll-margin-top: 80px;
+}
+
+#home {
+  scroll-margin-top: 0;
 }
 
 /* src/styles/global.css */

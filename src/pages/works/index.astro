@@ -1,6 +1,7 @@
 ---
 // src/pages/works/index.astro
 import MorphingTopo from '../../components/common/MorphingTopo';
+import SmoothScroll from '../../components/common/SmoothScroll.astro';
 import WorksGallery from '../../components/works/WorksGallery.astro';
 import '../../styles/global.css';
 
@@ -23,6 +24,7 @@ if (import.meta.env.PROD) {
     <meta name="description" content="Artwork gallery by Kyoronginus - Personal and Commission illustrations." />
   </head>
   <body>
+    <SmoothScroll />
     <MorphingTopo client:only="react" />
 
     <!-- Navbar -->

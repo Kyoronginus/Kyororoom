@@ -1,0 +1,39 @@
+---
+// src/components/common/SmoothScroll.astro
+---
+
+<script>
+  import Lenis from 'lenis';
+
+  // Initialize Lenis with smooth inertial physics
+  const lenis = new Lenis({
+    autoRaf: true,
+    anchors: true,
+    smoothWheel: true,
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    wheelMultiplier: 1.0,
+    touchMultiplier: 1.5,
+    infinite: false,
+    respectReducedMotion: true,
+  });
+
+  // Expose lenis instance globally for programmatic control
+  (window as any).lenis = lenis;
+
+  // If a hash exists in the URL on load, scroll to it smoothly
+  if (window.location.hash) {
+    const hash = window.location.hash;
+    // Delay slightly to let initial layout / images establish dimensions
+    setTimeout(() => {
+      try {
+        const target = document.querySelector(hash);
+        if (target) {
+          lenis.scrollTo(target as HTMLElement);
+        }
+      } catch {
+        // Ignore invalid selector
+      }
+    }, 100);
+  }
+</script>

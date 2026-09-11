@@ -3,6 +3,7 @@
 import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
 import MorphingTopo from '../components/common/MorphingTopo';
+import SmoothScroll from '../components/common/SmoothScroll.astro';
 import '../styles/global.css';
 
 // Import all images from src/assets/artgifts
@@ -27,6 +28,7 @@ const images = Object.entries(imageModules).map(([path, mod]) => ({
     <meta name="description" content="Art trade and gift gallery for Kyoronginus." />
   </head>
   <body>
+    <SmoothScroll />
     <MorphingTopo client:only="react" />
 
     <!-- Navbar -->

@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import SmoothScroll from "../components/common/SmoothScroll.astro";
 import Navbar from "../components/common/Navbar.astro";
 import MorphingTopo from "../components/common/MorphingTopo.tsx";
 
@@ -21,6 +22,7 @@ const { title } = Astro.props;
         <title>{title}</title>
     </head>
     <body class="bg-transparent text-spotify-textMain font-sans antialiased">
+        <SmoothScroll />
         <MorphingTopo client:only="react" />
         <Navbar />
         <slot />
