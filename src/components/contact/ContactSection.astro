@@ -8,22 +8,42 @@ import './ContactSection.css';
   <h1>CONTACTS</h1>
 
   <!-- Commission Subsection -->
-  <div class="commission-panel">
+  <!-- Commission Subsection -->
+  <div class="commission-panel" data-lang="en">
     <div class="commission-header-row">
-      <h2 class="commission-title">Commission</h2>
-      <span class="commission-status-badge">COMMISSION STATUS: OPEN</span>
+      <div class="commission-title-wrap">
+        <h2 class="commission-title">Commission</h2>
+        <div class="comm-lang-toggle" role="group" aria-label="Commission language toggle">
+          <button type="button" class="comm-lang-btn active" data-lang-btn="en" aria-pressed="true">EN</button>
+          <button type="button" class="comm-lang-btn" data-lang-btn="ja" aria-pressed="false">JP</button>
+        </div>
+      </div>
+      <span class="commission-status-badge">
+        <span class="lang-en">COMMISSION STATUS: OPEN</span>
+        <span class="lang-ja">COMMISSION STATUS: OPEN</span>
+      </span>
     </div>
 
     <p class="commission-intro">
-      Accepting commissions for character illustrations and original artwork.
+      <span class="lang-en">Accepting commissions for character illustrations and original artwork.</span>
+      <span class="lang-ja">キャラクターイラストやオリジナル作品の個人・商業依頼を受け付けております。</span>
     </p>
 
     <div class="commission-channels">
       <div class="channel-card">
         <div class="channel-info">
-          <span class="channel-tag">PERSONAL</span>
-          <h4 class="channel-heading">Personal Commissions</h4>
-          <p class="channel-desc">Submit your request directly via Google Form.</p>
+          <span class="channel-tag">
+            <span class="lang-en">PERSONAL</span>
+            <span class="lang-ja">個人向け</span>
+          </span>
+          <h4 class="channel-heading">
+            <span class="lang-en">Personal Commissions</span>
+            <span class="lang-ja">個人様向けご依頼</span>
+          </h4>
+          <p class="channel-desc">
+            <span class="lang-en">Submit your request directly via Google Form.</span>
+            <span class="lang-ja">Googleフォームより直接ご依頼・ご相談いただけます。</span>
+          </p>
         </div>
         <a
           href="https://docs.google.com/forms/d/e/1FAIpQLSdlij7_gfc9gt1PeVf7we4nzIGEvwi5f6pdD3JWp8cpL_AlzA/viewform?usp=sharing&ouid=101127023819410763660"
@@ -31,85 +51,180 @@ import './ContactSection.css';
           rel="noopener noreferrer"
           class="channel-btn"
         >
-          OPEN FORM
+          <span class="lang-en">OPEN FORM</span>
+          <span class="lang-ja">OPEN FORM</span>
         </a>
       </div>
 
       <div class="channel-card">
         <div class="channel-info">
-          <span class="channel-tag">BUSINESS</span>
-          <h4 class="channel-heading">Commercial & Inquiries</h4>
-          <p class="channel-desc">For commercial projects or business inquiries, email me directly to kyoronginus☆gmail.com (replace ☆ with @).</p>
+          <span class="channel-tag">
+            <span class="lang-en">BUSINESS</span>
+            <span class="lang-ja">企業・商業向け</span>
+          </span>
+          <h4 class="channel-heading">
+            <span class="lang-en">Commercial & Inquiries</span>
+            <span class="lang-ja">商業・お問い合わせ</span>
+          </h4>
+          <p class="channel-desc">
+            <span class="lang-en">For commercial projects or business inquiries, email me directly to kyoronginus☆gmail.com (replace ☆ with @).</span>
+            <span class="lang-ja">企業様のご依頼、その他のお問い合わせは kyoronginus☆gmail.com（☆を@に変更）まで直接ご連絡ください。</span>
+          </p>
         </div>
         <a
           href="mailto:kyoronginus@gmail.com"
           class="channel-btn"
         >
-          SEND EMAIL
+          <span class="lang-en">SEND EMAIL</span>
+          <span class="lang-ja">SEND EMAIL</span>
         </a>
       </div>
     </div>
 
     <!-- Foldable FAQ / Terms of Service -->
     <div class="commission-faq-section">
-      <h3 class="faq-section-title">FAQ</h3>
+      <h3 class="faq-section-title">
+        <span class="lang-en">FAQ</span>
+        <span class="lang-ja">FAQ</span>
+      </h3>
       <div class="faq-accordion">
         <details class="faq-item">
-          <summary class="faq-question">What kind of content do you accept? (NSFW policy)</summary>
+          <summary class="faq-question">
+            <span class="lang-en">What kind of content do you accept? (NSFW policy)</span>
+            <span class="lang-ja">どんな内容の依頼を受け付けていますか？（成人向け／NSFW対応）</span>
+          </summary>
           <div class="faq-answer">
-            <p>NSFW artworks are allowed. Gore is not accepted. </p>
+            <div class="lang-en">
+              <p>mild NSFW artworks are allowed. Gore is not accepted.</p>
+            </div>
+            <div class="lang-ja">
+              <p>過度でないNSFW作品の制作も可能です。過度な暴力描写はお引き受けできません。</p>
+            </div>
           </div>
         </details>
 
         <details class="faq-item">
-          <summary class="faq-question">What payment methods do you accept?</summary>
+          <summary class="faq-question">
+            <span class="lang-en">What payment methods do you accept?</span>
+            <span class="lang-ja">支払い方法は何に対応していますか？</span>
+          </summary>
           <div class="faq-answer">
-            <p>Payment will be via <strong>PayPal invoice in USD</strong>, or local bank transfer for <strong>Indonesian (IDR)</strong> and <strong>Japanese (JPY)</strong> clients. All commissions are non-refundable.</p>
+            <div class="lang-en">
+              <p>Payment will be via <strong>PayPal invoice in USD</strong>, or local bank transfer for <strong>Indonesian (IDR)</strong> and <strong>Japanese (JPY)</strong> clients. All commissions are non-refundable.</p>
+            </div>
+            <div class="lang-ja">
+              <p><strong>PayPal（米ドル決済）</strong>もしくは<strong>国内銀行振込（日本円 JPY）</strong>に対応しております。原則として返金には応じかねます。</p>
+            </div>
           </div>
         </details>
 
         <details class="faq-item">
-          <summary class="faq-question">When is payment due?</summary>
+          <summary class="faq-question">
+            <span class="lang-en">When is payment due?</span>
+            <span class="lang-ja">支払いタイミングはいつですか？</span>
+          </summary>
           <div class="faq-answer">
-            <p>Commissions are <strong>100% prepaid</strong>. I will start the commission once the full payment has been confirmed.</p>
+            <div class="lang-en">
+              <p>Commissions are <strong>100% prepaid</strong>. I will start the commission once the full payment has been confirmed.</p>
+            </div>
+            <div class="lang-ja">
+              <p>全額<strong>前払い（100%）</strong>制とさせていただいております。お支払いの確認が取れ次第、作業に着手いたします。</p>
+            </div>
           </div>
         </details>
 
         <details class="faq-item">
-          <summary class="faq-question">What is the workflow and revision policy?</summary>
+          <summary class="faq-question">
+            <span class="lang-en">What is the workflow and revision policy?</span>
+            <span class="lang-ja">制作の流れとリテイク（修正）について教えてください。</span>
+          </summary>
           <div class="faq-answer">
-            <p>You will receive a draft sketch for approval. If the sketch is approved, then I will proceed to complete the artwork. Once the sketch is approved, you will not be able to ask for major changes. I don't set a limit for minor revisions, feel free to ask for minor changes.</p>
+            <div class="lang-en">
+              <p>You will receive a draft sketch for approval. If the sketch is approved, then I will proceed to complete the artwork. Once the sketch is approved, you will not be able to ask for major changes. I don't set a limit for minor revisions, feel free to ask for minor changes.</p>
+            </div>
+            <div class="lang-ja">
+              <p>まずはラフ（下書き）をご確認いただきます。ラフが承認され次第、清書・仕上げの工程に進みます。ラフ確定後の大幅な構図・ポーズ変更はお受けできません。</p>
+            </div>
           </div>
         </details>
 
         <details class="faq-item">
-          <summary class="faq-question">Copyright and ownership rights</summary>
+          <summary class="faq-question">
+            <span class="lang-en">Copyright and ownership rights</span>
+            <span class="lang-ja">著作権および利用範囲について</span>
+          </summary>
           <div class="faq-answer">
-            <p>As an artist, I retain full rights and ownership of the commissioned work. Personal commissions are for personal, non-commercial use only. Commercial usage must be discussed prior to project commencement.</p>
+            <div class="lang-en">
+              <p>As an artist, I retain full rights and ownership of the commissioned work. Personal commissions are for personal, non-commercial use only. Commercial usage must be discussed prior to project commencement.</p>
+            </div>
+            <div class="lang-ja">
+              <p>制作物の著作権は制作者に帰属します。個人向け依頼の作品は個人利用・非商用目的に限られます。商業利用・収益化を伴う利用をご希望の場合は、必ず事前にお知らせください。</p>
+            </div>
           </div>
         </details>
 
         <details class="faq-item">
-          <summary class="faq-question">What file format and deliverables will I receive?</summary>
+          <summary class="faq-question">
+            <span class="lang-en">What file format and deliverables will I receive?</span>
+            <span class="lang-ja">納品形式と解像度について</span>
+          </summary>
           <div class="faq-answer">
-            <p>You will receive a high-resolution PNG file (approx. above <strong>3000px, 350 DPI</strong>), delivered via GDrive / Dropbox. You may also request other formats, including the original PSD file.</p>
+            <div class="lang-en">
+              <p>You will receive a high-resolution PNG file (approx. above <strong>3000px, 350 DPI</strong>), delivered via GDrive / Dropbox. You may also request other formats, including the original PSD file.</p>
+            </div>
+            <div class="lang-ja">
+              <p>PNGファイル（長辺<strong>3000px以上、350 DPI</strong>）をGoogle DriveまたはDropboxにて納品いたします。ご希望に応じてPSD（レイヤー保持）などの他フォーマットでの納品も可能です。</p>
+            </div>
           </div>
         </details>
       </div>
     </div>
   </div>
 
-  <h3 class="contacts-sub-title">Connect & Links</h3>
-  <div class="contact-links">
-    <a href="https://x.com/Kyoronginus" target="_blank" rel="noopener noreferrer" class="social-icon">X</a>
-    <a href="https://discord.gg/kyororoom" target="_blank" rel="noopener noreferrer" class="social-icon">Discord server</a>
-  </div>
+  <script>
+    const panel = document.querySelector('.commission-panel');
+    const toggleBtns = document.querySelectorAll('.comm-lang-btn');
+
+    if (panel && toggleBtns.length) {
+      const savedLang = localStorage.getItem('commission_lang') || 'en';
+      setLang(savedLang);
+
+      toggleBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const lang = btn.getAttribute('data-lang-btn');
+          if (lang) {
+            setLang(lang);
+            localStorage.setItem('commission_lang', lang);
+          }
+        });
+      });
+
+      function setLang(lang: string) {
+        panel?.setAttribute('data-lang', lang);
+        toggleBtns.forEach((b) => {
+          if (b.getAttribute('data-lang-btn') === lang) {
+            b.classList.add('active');
+            b.setAttribute('aria-pressed', 'true');
+          } else {
+            b.classList.remove('active');
+            b.setAttribute('aria-pressed', 'false');
+          }
+        });
+      }
+    }
+  </script>
+
+  <h3 class="contacts-sub-title">Links</h3>
   <div class="contact-badges">
-    <button class="badge-btn">OC Gallery</button>
-    <button class="badge-btn">Pixiv</button>
-    <button class="badge-btn">GitHub</button>
+    <a href="https://x.com/kyoro_ina" target="_blank" rel="noopener noreferrer" class="badge-btn">X</a>
+    <a href="https://www.pixiv.net/users/34124210" target="_blank" rel="noopener noreferrer" class="badge-btn">Pixiv</a>
+    <a href="https://www.patreon.com/Kyoronginus" target="_blank" rel="noopener noreferrer" class="badge-btn">Patreon</a>
+    <a href="https://github.com/Kyoronginus" target="_blank" rel="noopener noreferrer" class="badge-btn">GitHub</a>
+
+    <div class="break"></div>
+    <a href="/art-trades" class="badge-btn">Art trade gallery</a>
   </div>
-  <div style="margin-top: 2rem; display: flex; ">
+  <div class="counter-wrapper">
     <VisitorCounter client:load />
   </div>
 </section>

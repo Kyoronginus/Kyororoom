@@ -16,13 +16,58 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
+}
+
+.commission-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
 .commission-title {
   margin: 0;
   font-size: 1.4rem;
   font-weight: bold;
+}
+
+.comm-lang-toggle {
+  display: inline-flex;
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 2px;
+  gap: 2px;
+}
+
+.comm-lang-btn {
+  border: none;
+  background: transparent;
+  padding: 2px 8px;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  color: #666;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.comm-lang-btn:hover {
+  color: #111;
+}
+
+.comm-lang-btn.active {
+  background: #333;
+  color: #fff;
+}
+
+/* Toggle visibility based on data-lang attribute */
+.commission-panel[data-lang="en"] .lang-ja {
+  display: none !important;
+}
+
+.commission-panel[data-lang="ja"] .lang-en {
+  display: none !important;
 }
 
 .commission-status-badge {
@@ -186,33 +231,44 @@
   font-weight: bold;
 }
 
-.contact-links {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 20px;
-}
-
-.social-icon {
-  width: 80px;
-  height: 80px;
-  border: 1px solid #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  text-decoration: none;
-  color: inherit;
-  transition: border-color 0.2s, transform 0.2s;
-}
-
-.social-icon:hover {
-  border-color: #333;
-  transform: translateY(-2px);
-}
-
 .contact-badges {
   display: flex;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.badge-btn {
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  padding: 6px 14px;
+  background: #fff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: none;
+  color: #222;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.badge-btn:hover {
+  background-color: #37c13e;
+  color: #fff;
+  border-color: #37c13e;
+}
+
+.counter-wrapper {
+  margin-top: 8px;
+  display: flex;
+}
+
+.break {
+  flex-basis: 100%;
+  height: 0;
 }
 
 @media (max-width: 768px) {
@@ -220,3 +276,5 @@
     grid-template-columns: 1fr;
   }
 }
+
+

@@ -2,6 +2,7 @@
 // src/components/works/WorksGallery.astro
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
+import { getWorkAccentColor } from '../../utils/palette';
 
 interface Props {
   limit?: number;
@@ -22,6 +23,17 @@ const commissionCount = allWorks.filter((w) => w.data.category === 'commission')
 
 // If limit is provided (e.g. homepage), slice to limit
 const works = limit ? allWorks.slice(0, limit) : allWorks;
+
+// Extract dominant accent color per artwork for dynamic hover glow & border
+const worksWithColors = await Promise.all(
+  works.map(async (work) => {
+    const colors = await getWorkAccentColor(work.id);
+    return {
+      ...work,
+      colors,
+    };
+  })
+);
 ---
 
 <div class="works-container">
@@ -69,12 +81,13 @@ const works = limit ? allWorks.slice(0, limit) : allWorks;
 
   <!-- Works Grid -->
   <div class="works-grid">
-    {works.map((work) => {
+    {worksWithColors.map((work) => {
       const displayTitle = work.data.title?.trim() || 'untitled';
       return (
         <a
           href={`/works/${work.id}`}
           class="work-card"
+          style={`--card-accent: ${work.colors.accent};`}
           data-category={work.data.category}
           aria-label={displayTitle}
         >
@@ -174,14 +187,13 @@ const works = limit ? allWorks.slice(0, limit) : allWorks;
     text-decoration: none;
     color: inherit;
     overflow: hidden;
-    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, border-color 0.2s ease;
     animation: cardEntrance 0.3s ease-out;
   }
 
   .work-card:hover {
     transform: translateY(-3px);
-    border-color: #333;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-color: var(--card-accent, #333);
   }
 
   .is-hidden {

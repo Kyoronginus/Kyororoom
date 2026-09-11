@@ -6,7 +6,7 @@
     }
 
     .profile-icon {
-        background-image: url('/assets/About/icon.png');
+        background-image: url('/assets/About/icon.webp');
         background-size: cover;
         background-position: center;
         background-color: #eee;
@@ -25,12 +25,38 @@
         border: 1px solid #ccc;
         cursor: pointer;
         font-family: inherit;
-        transition: background-color 0.2s, color 0.2s;
+        text-decoration: none;
+        color: #222;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s, color 0.2s, border-color 0.2s;
     }
 
     .badge-btn:hover {
         background-color: #37c13e;
         color: #fff;
+        border-color: #37c13e;
+    }
+
+    .about-social-badges {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 4px;
+        margin-top: 4px;
+    }
+
+    .about-social-badges .social-icon-btn {
+        margin-top: 0;
+        padding: 8px 0;
+        height: 34px;
+        box-sizing: border-box;
+    }
+
+    .about-social-badges .social-icon {
+        width: 16px;
+        height: 16px;
+        display: block;
     }
 
     .widget {

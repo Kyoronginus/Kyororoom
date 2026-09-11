@@ -1,20 +1,40 @@
 .visitor-counter {
   display: inline-flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  padding: 10px 20px;
-  /* Font defaults to body font (DotGothic16) */
+  gap: 10px;
+  padding: 6px 12px;
+  background: #fff;
+  border: 1px solid #ccc;
+}
+
+.counter-pixel-art {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  flex-shrink: 0;
+}
+
+.counter-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .counter-label {
-  font-size: 0.8rem;
-  margin-bottom: 5px;
+  font-size: 0.65rem;
   text-transform: uppercase;
-  color: #666;
+  color: #777;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  margin-bottom: 3px;
 }
 
 .counter-display {
-  font-size: 1.5rem;
+  font-size: 0.85rem;
   font-weight: bold;
   letter-spacing: 2px;
+  color: #111;
+  line-height: 1;
 }

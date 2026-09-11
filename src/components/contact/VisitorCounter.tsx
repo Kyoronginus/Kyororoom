@@ -13,7 +13,7 @@ export default function VisitorCounter() {
           setViews(data.views);
         }
       } catch (err) {
-        console.error("Failed to fetch views", err);
+        console.error('Failed to fetch views', err);
       }
     };
     fetchViews();
@@ -21,9 +21,18 @@ export default function VisitorCounter() {
 
   return (
     <div className="visitor-counter widget">
-      <div className="counter-label">YOU ARE VISITOR NO.</div>
-      <div className="counter-display">
-        {views !== null ? String(views).padStart(6, '0') : "------"}
+      <img
+        src="/assets/contacts/venna_pixel.png"
+        alt="Venna"
+        className="counter-pixel-art"
+        width={32}
+        height={32}
+      />
+      <div className="counter-content">
+        <div className="counter-label">Visits</div>
+        <div className="counter-display">
+          {views !== null ? String(views).padStart(6, '0') : '------'}
+        </div>
       </div>
     </div>
   );

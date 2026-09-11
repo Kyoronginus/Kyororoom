@@ -1,0 +1,146 @@
+---
+// src/pages/art-trades.astro
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import MorphingTopo from '../components/common/MorphingTopo';
+import '../styles/global.css';
+
+// Import all images from src/assets/artgifts
+const imageModules = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/artgifts/*.{png,jpg,jpeg,webp,PNG,JPG,JPEG}',
+  { eager: true }
+);
+
+const images = Object.entries(imageModules).map(([path, mod]) => ({
+  path,
+  name: path.split('/').pop()?.replace(/\.[^/.]+$/, '') || '',
+  data: mod.default,
+}));
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ART TRADES & GIFTS</title>
+    <meta name="description" content="Art trade and gift gallery for Kyoronginus." />
+  </head>
+  <body>
+    <MorphingTopo client:only="react" />
+
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="logo">
+        <h2 class="my-0">
+          <a href="/#contact" id="trade-back-btn">BACK</a>
+        </h2>
+      </div>
+      <div class="nav-links">
+        <a href="/#about">ABOUT</a>
+        <a href="/#works">WORKS</a>
+        <a href="/#blog">BLOG</a>
+        <a href="/#contact">CONTACT</a>
+      </div>
+    </nav>
+
+    <script is:inline>
+      const backBtn = document.getElementById('trade-back-btn');
+      if (backBtn) {
+        backBtn.addEventListener('click', (e) => {
+          if (window.history.length > 1 && document.referrer && new URL(document.referrer).origin === window.location.origin) {
+            e.preventDefault();
+            window.history.back();
+          }
+        });
+      }
+    </script>
+
+    <main class="trades-main">
+      <header class="trades-header">
+        <h1 class="page-title">ART TRADES & GIFTS</h1>
+      </header>
+
+      <div class="trades-grid">
+        {images.map(({ data, name }) => (
+          <div class="trade-card">
+            <a href={data.src} target="_blank" rel="noopener noreferrer" class="trade-link" title={name}>
+              <Image
+                src={data}
+                alt={name}
+                width={800}
+                quality={85}
+                loading="lazy"
+                class="trade-img"
+              />
+            </a>
+          </div>
+        ))}
+      </div>
+    </main>
+
+    <footer class="footer text-center" style="margin-top: 60px; padding-bottom: 40px;">
+      <p class="copyright">© 2026 Kyoronginus. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .trades-main {
+    max-width: var(--content-max-width);
+    width: var(--content-width);
+    margin: 0 auto;
+    padding: 20px 0;
+  }
+
+  .trades-header {
+    margin-bottom: 24px;
+  }
+
+  .page-title {
+    font-size: var(--section-title-size);
+    margin: 0.2em 0;
+  }
+
+  .trades-grid {
+    columns: 3 320px;
+    column-gap: 16px;
+  }
+
+  .trade-card {
+    break-inside: avoid;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .trade-card:hover {
+    border-color: #333;
+    transform: translateY(-2px);
+  }
+
+  .trade-link {
+    display: block;
+    width: 100%;
+    cursor: zoom-in;
+  }
+
+  .trade-img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  @media (max-width: 640px) {
+    .trades-grid {
+      columns: 2 150px;
+      column-gap: 10px;
+    }
+
+    .trade-card {
+      margin-bottom: 10px;
+    }
+  }
+</style>
