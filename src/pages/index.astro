@@ -1,14 +1,14 @@
 ---
 import "../styles/global.css";
-import MorphingTopo from "../components/react/Background/MorphingTopo.tsx";
-import Ticker from "../components/react/Hero/Ticker.tsx";
-import HeroCarousel from "../components/react/Hero/HeroCarousel.tsx";
-import AboutSection from "../components/astro/AboutSection.astro";
-import MediaBanner from "../components/astro/MediaBanner.astro";
-import VisitorCounter from "../components/react/Contact/VisitorCounter.tsx";
-import PatreonBlog from "../components/react/Blog/PatreonBlog.tsx";
-import PatronTicker from "../components/react/Hero/PatronTicker.tsx";
-import WorksGallery from "../components/astro/WorksGallery.astro";
+import MorphingTopo from "../components/common/MorphingTopo.tsx";
+import Ticker from "../components/hero/Ticker.tsx";
+import HeroCarousel from "../components/hero/HeroCarousel.tsx";
+import AboutSection from "../components/about/AboutSection.astro";
+import MediaBanner from "../components/hero/MediaBanner.astro";
+import ContactSection from "../components/contact/ContactSection.astro";
+import PatreonBlog from "../components/blog/PatreonBlog.tsx";
+import PatronTicker from "../components/hero/PatronTicker.tsx";
+import WorksGallery from "../components/works/WorksGallery.astro";
 import { fetchLatestPosts, fetchActiveMembers } from "../lib/patreon";
 
 const initialPosts = await fetchLatestPosts();
@@ -32,9 +32,8 @@ const initialMembers = await fetchActiveMembers();
       </div>
       <div class="nav-links">
         <a href="#about">ABOUT</a>
-        <a href="#blog">BLOG</a>
         <a href="#works">WORKS</a>
-        <a href="#projects">PROJECTS</a>
+        <a href="#blog">BLOG</a>
         <a href="#contact">CONTACT</a>
       </div>
     </nav>
@@ -49,10 +48,11 @@ const initialMembers = await fetchActiveMembers();
 
     <main>
        <div class="banner-container flex flex-wrap gap-2">
-        <MediaBanner type="image" src="/Assets/Hero/Video/Uchinoko Kawaii.gif" alt="Animated Banner" href="https://uchinokokawaii.netlify.app"/>
-        <MediaBanner type="image" src="/Assets/Hero/Etc/idolized.png" alt="Static Banner" />
-        <MediaBanner type="image" src="/Assets/Hero/Video/oekakusa.gif" alt="Animated Banner" href="https://github.com/Kyoronginus/oekakusa" />
-        <!-- <MediaBanner type="image" src="/Assets/Hero/Etc/oekakusa.png" alt="Static Banner" /> -->
+        <MediaBanner type="image" src="/assets/Hero/Video/Uchinoko Kawaii.gif" alt="Animated Banner" href="https://uchinokokawaii.netlify.app"/>
+        <MediaBanner type="image" src="/assets/Hero/Video/oekakusa.gif" alt="Animated Banner" href="https://github.com/Kyoronginus/oekakusa" />
+        <MediaBanner type="image" src="/assets/Hero/Video/fibonacci.gif" alt="Animated Banner" href="https://fibonacci-spiral-detecti-bf743.web.app/" />
+        <MediaBanner type="image" src="/assets/Hero/Etc/idolized.png" alt="Static Banner" />
+        <!-- <MediaBanner type="image" src="/assets/Hero/Etc/oekakusa.png" alt="Static Banner" /> -->
        </div>
 
       <!-- ABOUT -->
@@ -87,21 +87,13 @@ const initialMembers = await fetchActiveMembers();
       </section>
 
       <!-- CONTACTS -->
-      <section id="contacts">
-        <h1>CONTACTS</h1>
-        <div class="contact-links">
-          <div class="social-icon">X</div>
-          <div class="social-icon">Discord server</div>
-        </div>
-        <div class="contact-badges">
-          <button class="badge-btn">OC Gallery</button>
-          <button class="badge-btn">...</button>
-          <button class="badge-btn">...</button>
-        </div>
-        <div style="margin-top: 2rem; display: flex; ">
-          <VisitorCounter client:load />
-        </div>
-      </section>
+      <ContactSection />
     </main>
+
+    <script>
+      import { setupScrollspy } from '../utils/scrollspy';
+      setupScrollspy();
+      document.addEventListener('astro:page-load', setupScrollspy);
+    </script>
   </body>
 </html>

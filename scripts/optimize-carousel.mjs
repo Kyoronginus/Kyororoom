@@ -3,14 +3,14 @@ import path from 'node:path';
 import sharp from 'sharp';
 
 const SOURCE_DIR = path.resolve('src/assets/hero-carousel');
-const OUTPUT_DIR = path.resolve('public/Assets/Hero/Carousel');
+const OUTPUT_DIR = path.resolve('public/assets/Hero/Carousel');
 
 // 1. Ensure source directory exists
 if (!fs.existsSync(SOURCE_DIR)) {
   fs.mkdirSync(SOURCE_DIR, { recursive: true });
 }
 
-// 2. If original raw images are still in public/Assets/Hero/Carousel, move them to src/assets/hero-carousel
+// 2. If original raw images are still in public/assets/Hero/Carousel, move them to src/assets/hero-carousel
 if (fs.existsSync(OUTPUT_DIR)) {
   const existingFiles = fs.readdirSync(OUTPUT_DIR);
   for (const file of existingFiles) {

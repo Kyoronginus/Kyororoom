@@ -1,19 +1,53 @@
 import type { APIRoute } from 'astro';
+import { siteConfig } from '../../config/site';
+import { fetchLatestPosts, type PatreonPost } from '../../lib/patreon';
+
+export interface TickerResponse {
+  commission: {
+    isOpen: boolean;
+    statusLabel: string;
+  };
+  latestPost: {
+    id: string;
+    title: string;
+    url: string;
+    date: string;
+  } | null;
+  announcements: string[];
+}
 
 export const GET: APIRoute = async () => {
-  // Mock Patreon API implementation
-  // You will replace this with a call to Patreon's API using PATREON_CREATOR_TOKEN
-  const mockPatreonData = [
-    { id: 1, title: "New Sketch: Ghost City", type: "free" },
-    { id: 2, title: "WIP: Next illustration", type: "patrons_only" },
-    { id: 3, title: "Thank you for 100 members!", type: "public" },
-  ];
+  let latestPost: TickerResponse['latestPost'] = null;
 
-  return new Response(JSON.stringify(mockPatreonData), {
+  try {
+    const posts: PatreonPost[] = await fetchLatestPosts();
+    if (posts && posts.length > 0) {
+      const top = posts[0];
+      latestPost = {
+        id: top.id,
+        title: top.title,
+        url: top.url,
+        date: top.date,
+      };
+    }
+  } catch (err) {
+    console.error('Failed to fetch latest post for ticker:', err);
+  }
+
+  const responseData: TickerResponse = {
+    commission: {
+      isOpen: siteConfig.commissions.isOpen,
+      statusLabel: siteConfig.commissions.statusLabel,
+    },
+    latestPost,
+    announcements: siteConfig.announcements,
+  };
+
+  return new Response(JSON.stringify(responseData), {
     status: 200,
     headers: {
       'Content-Type': 'application/json',
-      // 'Cache-Control': 's-maxage=3600' // Cache for an hour since patreon doesn't update every second
-    }
+      'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+    },
   });
 };

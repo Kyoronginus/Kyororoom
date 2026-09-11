@@ -1,4 +1,4 @@
-/* src/components/react/Ticker.css */
+/* src/components/hero/Ticker.css */
 .ticker-wrapper {
   width: 100%;
   overflow: hidden;
@@ -15,7 +15,8 @@
   animation: ticker 40s linear infinite;
 }
 
-.ticker-content span {
+.ticker-content span,
+.ticker-content a {
   margin-right: 10rem;
   color: #333;
 }

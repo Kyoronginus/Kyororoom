@@ -65,7 +65,7 @@ export default function GitHubWidget({ username }: { username: string }) {
   return (
     <div className="github-widget widget">
       <div className="github-header">
-        <img src="/Assets/icons/pixel-code.svg" alt="Code" className="pixel-icon" />
+        <img src="/assets/icons/pixel-code.svg" alt="Code" className="pixel-icon" />
         <span>LATEST COMMIT</span>
       </div>
       <div className="github-body">

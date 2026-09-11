@@ -1,0 +1,115 @@
+---
+// src/components/contact/ContactSection.astro
+import VisitorCounter from './VisitorCounter.tsx';
+import './ContactSection.css';
+---
+
+<section id="contact">
+  <h1>CONTACTS</h1>
+
+  <!-- Commission Subsection -->
+  <div class="commission-panel">
+    <div class="commission-header-row">
+      <h2 class="commission-title">Commission</h2>
+      <span class="commission-status-badge">COMMISSION STATUS: OPEN</span>
+    </div>
+
+    <p class="commission-intro">
+      Accepting commissions for character illustrations and original artwork.
+    </p>
+
+    <div class="commission-channels">
+      <div class="channel-card">
+        <div class="channel-info">
+          <span class="channel-tag">PERSONAL</span>
+          <h4 class="channel-heading">Personal Commissions</h4>
+          <p class="channel-desc">Submit your request directly via Google Form.</p>
+        </div>
+        <a
+          href="https://docs.google.com/forms/d/e/1FAIpQLSdlij7_gfc9gt1PeVf7we4nzIGEvwi5f6pdD3JWp8cpL_AlzA/viewform?usp=sharing&ouid=101127023819410763660"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="channel-btn"
+        >
+          OPEN FORM
+        </a>
+      </div>
+
+      <div class="channel-card">
+        <div class="channel-info">
+          <span class="channel-tag">BUSINESS</span>
+          <h4 class="channel-heading">Commercial & Inquiries</h4>
+          <p class="channel-desc">For commercial projects or business inquiries, email me directly to kyoronginus☆gmail.com (replace ☆ with @).</p>
+        </div>
+        <a
+          href="mailto:kyoronginus@gmail.com"
+          class="channel-btn"
+        >
+          SEND EMAIL
+        </a>
+      </div>
+    </div>
+
+    <!-- Foldable FAQ / Terms of Service -->
+    <div class="commission-faq-section">
+      <h3 class="faq-section-title">FAQ</h3>
+      <div class="faq-accordion">
+        <details class="faq-item">
+          <summary class="faq-question">What kind of content do you accept? (NSFW policy)</summary>
+          <div class="faq-answer">
+            <p>NSFW artworks are allowed. Gore is not accepted. </p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">What payment methods do you accept?</summary>
+          <div class="faq-answer">
+            <p>Payment will be via <strong>PayPal invoice in USD</strong>, or local bank transfer for <strong>Indonesian (IDR)</strong> and <strong>Japanese (JPY)</strong> clients. All commissions are non-refundable.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">When is payment due?</summary>
+          <div class="faq-answer">
+            <p>Commissions are <strong>100% prepaid</strong>. I will start the commission once the full payment has been confirmed.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">What is the workflow and revision policy?</summary>
+          <div class="faq-answer">
+            <p>You will receive a draft sketch for approval. If the sketch is approved, then I will proceed to complete the artwork. Once the sketch is approved, you will not be able to ask for major changes. I don't set a limit for minor revisions, feel free to ask for minor changes.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">Copyright and ownership rights</summary>
+          <div class="faq-answer">
+            <p>As an artist, I retain full rights and ownership of the commissioned work. Personal commissions are for personal, non-commercial use only. Commercial usage must be discussed prior to project commencement.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">What file format and deliverables will I receive?</summary>
+          <div class="faq-answer">
+            <p>You will receive a high-resolution PNG file (approx. above <strong>3000px, 350 DPI</strong>), delivered via GDrive / Dropbox. You may also request other formats, including the original PSD file.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="contacts-sub-title">Connect & Links</h3>
+  <div class="contact-links">
+    <a href="https://x.com/Kyoronginus" target="_blank" rel="noopener noreferrer" class="social-icon">X</a>
+    <a href="https://discord.gg/kyororoom" target="_blank" rel="noopener noreferrer" class="social-icon">Discord server</a>
+  </div>
+  <div class="contact-badges">
+    <button class="badge-btn">OC Gallery</button>
+    <button class="badge-btn">Pixiv</button>
+    <button class="badge-btn">GitHub</button>
+  </div>
+  <div style="margin-top: 2rem; display: flex; ">
+    <VisitorCounter client:load />
+  </div>
+</section>

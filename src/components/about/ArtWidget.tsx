@@ -93,8 +93,8 @@ export default function ArtWidget() {
   return (
     <div className="art-widget widget">
       <div className="art-header">
-        <img src="/Assets/icons/pixel-art.svg" alt="Art" className="pixel-icon" />
-        <span>LATEST ART</span>
+        <img src="/assets/icons/pixel-art.svg" alt="Art" className="pixel-icon" />
+        <span>LATEST ART PROGRESS</span>
       </div>
       <div className="art-body">
         {loading ? (

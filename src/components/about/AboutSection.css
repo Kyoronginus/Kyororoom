@@ -6,18 +6,25 @@
     }
 
     .profile-icon {
-        background-image: url('/Assets/About/icon.png');
+        background-image: url('/assets/About/icon.png');
         background-size: cover;
         background-position: center;
-        width: 100%;
-        height: auto;
-        aspect-ratio: 1;
+        background-color: #eee;
+        border: 1px solid #ccc;
+        width: 100px;
+        height: 100px;
+        flex-shrink: 0;
     }
     .badge-btn {
         font-size: 0.85rem;
         font-weight: bold;
         letter-spacing: 0.05em;
         padding: 5px 10px;
+        margin-top: 8px;
+        background: #fff;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        font-family: inherit;
         transition: background-color 0.2s, color 0.2s;
     }
 
@@ -26,12 +33,19 @@
         color: #fff;
     }
 
+    .widget {
+      border: 1px solid #ccc;
+      padding: 10px;
+      background: #fff;
+    }
 
     .about-right .name {
       margin-top: 0;
     }
 
     .about-grid {
+      display: flex;
+      gap: 30px;
       align-items: flex-start;
       transition: gap 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -42,6 +56,8 @@
     }
 
     .about-left {
+      display: flex;
+      flex-direction: column;
       position: sticky;
       top: 90px;
       width: 220px;

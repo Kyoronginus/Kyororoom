@@ -1,11 +1,12 @@
 ---
-// src/components/astro/AboutSection.astro
-import SpotifyWidget from "../react/About/SpotifyWidget.tsx";
-import DiscordWidget from "../react/About/DiscordWidget.tsx";
-import GitHubWidget from "../react/About/GitHubWidget.tsx";
-import ArtWidget from "../react/About/ArtWidget.tsx";
+// src/components/about/AboutSection.astro
+import SpotifyWidget from "./SpotifyWidget.tsx";
+import DiscordWidget from "./DiscordWidget.tsx";
+import GitHubWidget from "./GitHubWidget.tsx";
+import ArtWidget from "./ArtWidget.tsx";
 import "./AboutSection.css";
 import OcCard from "./OcCard.astro";
+import { siteConfig } from "../../config/site";
 
 const discordId = import.meta.env.DISCORD_ID;
 ---
@@ -19,12 +20,13 @@ const discordId = import.meta.env.DISCORD_ID;
         <div class="flex-col">
           <div>
             <span style="font-style:italic"
-              >50% Artist, 50% Computer Science. But</span>
+              >50% Artist, 50% Computer Science. But</span
+            >
           </div>
           <div><span style="font-style:italic">master of none</span></div>
         </div>
       </div>
-      <button class="badge-btn">COMMISSION STATUS: OPEN</button>
+      <button class="badge-btn">COMMISSION STATUS: {siteConfig.commissions.statusLabel}</button>
       <div class="mt-4">
         <SpotifyWidget client:load />
       </div>
@@ -83,7 +85,7 @@ const discordId = import.meta.env.DISCORD_ID;
           name="Venna"
           tag="Dreamy shorty gaki"
           desc="Most belovedd"
-          src="/Assets/About/OCs/venna-1.png"
+          src="/assets/About/OCs/venna-1.png"
           alt="Venna"
         />
 
@@ -91,7 +93,7 @@ const discordId = import.meta.env.DISCORD_ID;
           name="Agnia"
           tag=""
           desc="omw creating a game with her as the MC!!!"
-          src="/Assets/About/OCs/agnia-1.png"
+          src="/assets/About/OCs/agnia-1.png"
           alt="Agnia"
         />
 
@@ -99,7 +101,7 @@ const discordId = import.meta.env.DISCORD_ID;
           name="Still anonymous"
           tag=""
           desc="<- her younger bro"
-          src="/Assets/About/OCs/agamenon-1.png"
+          src="/assets/About/OCs/agamenon-1.png"
           alt="Agamenon"
         />
       </div>

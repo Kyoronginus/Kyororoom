@@ -3,14 +3,14 @@ import './HeroCarousel.css';
 
 // Easily add, remove, or reorder images here:
 const images = [
-  "/Assets/Hero/Carousel/6.webp",
-  "/Assets/Hero/Carousel/7.webp",
-  "/Assets/Hero/Carousel/8.webp",
-  "/Assets/Hero/Carousel/1.webp",
-  "/Assets/Hero/Carousel/2.webp",
-  "/Assets/Hero/Carousel/3.webp",
-  "/Assets/Hero/Carousel/4.webp",
-  "/Assets/Hero/Carousel/5.webp",
+  "/assets/Hero/Carousel/6.webp",
+  "/assets/Hero/Carousel/7.webp",
+  "/assets/Hero/Carousel/8.webp",
+  "/assets/Hero/Carousel/1.webp",
+  "/assets/Hero/Carousel/2.webp",
+  "/assets/Hero/Carousel/3.webp",
+  "/assets/Hero/Carousel/4.webp",
+  "/assets/Hero/Carousel/5.webp",
 ];
 
 // 3 copies (prefix, main, suffix) ensure infinite circular scrolling in both directions

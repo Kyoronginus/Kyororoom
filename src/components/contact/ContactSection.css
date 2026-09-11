@@ -1,0 +1,222 @@
+/* src/components/contact/ContactSection.css */
+
+.commission-panel {
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 24px;
+  margin-top: 15px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.commission-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.commission-title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.commission-status-badge {
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  color: #1b8a2e;
+  border: 1px solid #1b8a2e;
+  background: #f4faf5;
+}
+
+.commission-intro {
+  margin: 0;
+  color: #555;
+  line-height: 1.6;
+}
+
+.commission-channels {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.channel-card {
+  border: 1px solid #ddd;
+  background: #fafafa;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  transition: border-color 0.2s ease;
+}
+
+.channel-card:hover {
+  border-color: #333;
+}
+
+.channel-tag {
+  font-size: 0.7rem;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  color: #888;
+}
+
+.channel-heading {
+  margin: 4px 0 6px 0;
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: #111;
+}
+
+.channel-desc {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+.channel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  background: #222;
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  transition: background-color 0.2s ease;
+  align-self: flex-start;
+}
+
+.channel-btn:hover {
+  background: #37c13e;
+}
+
+/* Foldable FAQ Accordion */
+.commission-faq-section {
+  margin-top: 8px;
+  border-top: 1px solid #eee;
+  padding-top: 16px;
+}
+
+.faq-section-title {
+  margin: 0 0 12px 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #222;
+}
+
+.faq-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.faq-item {
+  border: 1px solid #eee;
+  background: #fff;
+  transition: border-color 0.2s ease;
+}
+
+.faq-item[open] {
+  border-color: #ccc;
+}
+
+.faq-question {
+  padding: 12px 16px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  user-select: none;
+  color: #222;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+}
+
+.faq-question::-webkit-details-marker {
+  display: none;
+}
+
+.faq-question::after {
+  content: '+';
+  font-size: 1.2rem;
+  font-weight: normal;
+  color: #888;
+  transition: transform 0.2s ease;
+}
+
+.faq-item[open] .faq-question::after {
+  content: '−';
+  color: #111;
+}
+
+.faq-question:hover {
+  background: #f9f9f9;
+}
+
+.faq-answer {
+  padding: 0 16px 14px 16px;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: #444;
+  border-top: 1px solid #f2f2f2;
+  margin-top: 4px;
+}
+
+.faq-answer p {
+  margin: 8px 0 0 0;
+}
+
+.contacts-sub-title {
+  margin: 20px 0 10px 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.contact-links {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.social-icon {
+  width: 80px;
+  height: 80px;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.social-icon:hover {
+  border-color: #333;
+  transform: translateY(-2px);
+}
+
+.contact-badges {
+  display: flex;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .commission-channels {
+    grid-template-columns: 1fr;
+  }
+}
