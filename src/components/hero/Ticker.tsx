@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Ticker.css';
 
-interface TickerData {
+export interface TickerData {
   commission: {
     isOpen: boolean;
     statusLabel: string;
@@ -15,8 +15,12 @@ interface TickerData {
   announcements: string[];
 }
 
-export default function Ticker() {
-  const [tickerData, setTickerData] = useState<TickerData | null>(null);
+interface TickerProps {
+  initialData?: TickerData | null;
+}
+
+export default function Ticker({ initialData = null }: TickerProps) {
+  const [tickerData, setTickerData] = useState<TickerData | null>(initialData);
 
   useEffect(() => {
     const fetchTicker = async () => {

@@ -10,9 +10,24 @@ import PatreonBlog from "../components/blog/PatreonBlog.tsx";
 import PatronTicker from "../components/hero/PatronTicker.tsx";
 import WorksGallery from "../components/works/WorksGallery.astro";
 import { fetchLatestPosts, fetchActiveMembers } from "../lib/patreon";
+import { siteConfig } from "../config/site";
 
 const initialPosts = await fetchLatestPosts();
 const initialMembers = await fetchActiveMembers();
+
+const initialTickerData = {
+  commission: {
+    isOpen: siteConfig.commissions.isOpen,
+    statusLabel: siteConfig.commissions.statusLabel,
+  },
+  latestPost: initialPosts && initialPosts.length > 0 ? {
+    id: initialPosts[0].id,
+    title: initialPosts[0].title,
+    url: initialPosts[0].url,
+    date: initialPosts[0].date,
+  } : null,
+  announcements: siteConfig.announcements || [],
+};
 ---
 
 <!doctype html>
@@ -43,12 +58,30 @@ const initialMembers = await fetchActiveMembers();
     </nav>
 
     <!-- TICKER (流れる掲示板) -->
-    <Ticker client:load />
+    <Ticker initialData={initialTickerData} client:load />
 
     <!-- HOME (横スクロールギャラリー) -->
     <section id="home">
       <HeroCarousel client:load />
     </section>
+    <script is:inline>
+      (function() {
+        function alignCarousel() {
+          const track = document.querySelector('.hero-carousel-track');
+          if (!track) return;
+          const items = track.querySelectorAll('.hero-carousel-item');
+          if (items.length >= 16) {
+            const singleSetWidth = items[8].offsetLeft - items[0].offsetLeft;
+            if (singleSetWidth > 0) {
+              track.scrollLeft = singleSetWidth;
+              track.classList.add('is-ready');
+            }
+          }
+        }
+        alignCarousel();
+        window.addEventListener('DOMContentLoaded', alignCarousel, { once: true });
+      })();
+    </script>
 
     <main>
        <div class="banner-container flex flex-wrap gap-2">

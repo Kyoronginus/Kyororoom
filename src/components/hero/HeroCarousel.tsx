@@ -19,6 +19,7 @@ const TRIPLE_IMAGES = [...images, ...images, ...images];
 export default function HeroCarousel() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [isDown, setIsDown] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const startXRef = useRef(0);
   const scrollStartRef = useRef(0);
   const hasDraggedRef = useRef(false);
@@ -33,17 +34,17 @@ export default function HeroCarousel() {
       const singleSetWidth = items[images.length].offsetLeft - items[0].offsetLeft;
       if (singleSetWidth > 0) {
         track.scrollLeft = singleSetWidth;
+        setIsReady(true);
       }
     }
   }, []);
 
   useEffect(() => {
     initScrollPosition();
-    // Allow images to load and layout to stabilize
-    const timer = setTimeout(initScrollPosition, 150);
+    const animId = requestAnimationFrame(initScrollPosition);
     window.addEventListener('resize', initScrollPosition);
     return () => {
-      clearTimeout(timer);
+      cancelAnimationFrame(animId);
       window.removeEventListener('resize', initScrollPosition);
     };
   }, [initScrollPosition]);
@@ -133,7 +134,7 @@ export default function HeroCarousel() {
   return (
     <div className="hero-carousel-container">
       <div
-        className="hero-carousel-track"
+        className={`hero-carousel-track ${isReady ? 'is-ready' : ''}`}
         ref={trackRef}
         onScroll={handleScroll}
         onMouseDown={handleMouseDown}
