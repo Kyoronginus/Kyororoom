@@ -8,6 +8,7 @@ import MediaBanner from "../components/astro/MediaBanner.astro";
 import VisitorCounter from "../components/react/Contact/VisitorCounter.tsx";
 import PatreonBlog from "../components/react/Blog/PatreonBlog.tsx";
 import PatronTicker from "../components/react/Hero/PatronTicker.tsx";
+import WorksGallery from "../components/astro/WorksGallery.astro";
 import { fetchLatestPosts, fetchActiveMembers } from "../lib/patreon";
 
 const initialPosts = await fetchLatestPosts();
@@ -62,16 +63,7 @@ const initialMembers = await fetchActiveMembers();
       <!-- WORKS -->
       <section id="works">
         <h1>WORKS</h1>
-        <div class="works-grid">
-          <div class="work-item"></div>
-          <div class="work-item"></div>
-          <div class="work-item"></div>
-          <div class="work-item"></div>
-          <div class="work-item"></div>
-          <div class="work-item"></div>
-          <div class="work-item"></div>
-          <div class="work-item"></div>
-        </div>
+        <WorksGallery limit={12} isHome={true} />
       </section>
       <!-- BLOG -->
       <section id="blog">

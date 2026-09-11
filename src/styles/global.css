@@ -104,6 +104,28 @@ h2 {
   cursor: pointer;
 }
 
+/* BANNER */
+.banner-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 8px;
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  transition: gap 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.banner-container::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .banner-container {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
+}
+
 /* ABOUT */
 .about-grid {
   display: flex;
@@ -168,16 +190,7 @@ h2 {
 }
 
 /* WORKS */
-.works-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-}
-.work-item {
-  aspect-ratio: 1;
-  background: #eee;
-  border: 1px solid #ccc;
-}
+/* Handled in src/components/astro/WorksGallery.astro */
 
 /* PROJECTS */
 .projects-grid {

@@ -59,19 +59,34 @@ const isExternal = Boolean(href && (href.startsWith('http://') || href.startsWit
 <style>
   .media-banner-section {
     width: 300px;
-    height: 110px;
-    flex: 0 0 auto;
+    max-width: 300px;
+    height: auto;
+    aspect-ratio: 300 / 110;
+    flex: 0 0 300px;
+    box-sizing: border-box;
     border: 1px #d1d1d1 solid;
     overflow: hidden;
     display: block;
     text-decoration: none;
-    transition: opacity 0.2s ease, border-color 0.2s ease;
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                flex-basis 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.2s ease,
+                opacity 0.2s ease,
+                border-color 0.2s ease;
+  }
+
+  @media (min-width: 769px) {
+    .media-banner-section {
+      animation: bannerSwitch 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
   }
   
   a.media-banner-section:hover {
     opacity: 0.85;
     border-color: #999;
     cursor: pointer;
+    transform: translateY(-2px);
   }
 
   .media-banner {
@@ -80,5 +95,25 @@ const isExternal = Boolean(href && (href.startsWith('http://') || href.startsWit
     display: block;
     object-fit: cover;
     background-color: #eaeaea; 
+  }
+
+  @media (max-width: 768px) {
+    .media-banner-section {
+      width: calc((100% - 8px) / 2);
+      max-width: calc((100% - 8px) / 2);
+      flex: 0 0 calc((100% - 8px) / 2);
+      animation: bannerSwitch 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  }
+
+  @keyframes bannerSwitch {
+    from {
+      opacity: 0.75;
+      transform: scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 </style>

@@ -1,0 +1,355 @@
+---
+// src/components/astro/WorksGallery.astro
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+
+interface Props {
+  limit?: number;
+  isHome?: boolean;
+  initialCategory?: string;
+}
+
+const { limit, isHome = false, initialCategory = 'all' } = Astro.props;
+
+const allWorks = (await getCollection('works')).sort(
+  (a, b) =>
+    new Date(b.data.date).getTime() - new Date(a.data.date).getTime() ||
+    b.id.localeCompare(a.id)
+);
+
+const personalCount = allWorks.filter((w) => w.data.category === 'personal').length;
+const commissionCount = allWorks.filter((w) => w.data.category === 'commission').length;
+
+// If limit is provided (e.g. homepage), slice to limit
+const works = limit ? allWorks.slice(0, limit) : allWorks;
+---
+
+<div class="works-container">
+  <!-- Filter Bar -->
+  {isHome ? (
+    <div class="works-filter-bar" role="navigation" aria-label="Works Filter">
+      <a href="/works" class="works-filter-btn active">
+        ALL <span class="filter-count">({allWorks.length})</span>
+      </a>
+      <a href="/works?category=personal" class="works-filter-btn">
+        PERSONAL <span class="filter-count">({personalCount})</span>
+      </a>
+      <a href="/works?category=commission" class="works-filter-btn">
+        COMMISSION <span class="filter-count">({commissionCount})</span>
+      </a>
+    </div>
+  ) : (
+    <div class="works-filter-bar" role="tablist" aria-label="Works Filter">
+      <button
+        class={`works-filter-btn ${initialCategory === 'all' ? 'active' : ''}`}
+        data-filter="all"
+        role="tab"
+        aria-selected={initialCategory === 'all' ? 'true' : 'false'}
+      >
+        ALL <span class="filter-count">({allWorks.length})</span>
+      </button>
+      <button
+        class={`works-filter-btn ${initialCategory === 'personal' ? 'active' : ''}`}
+        data-filter="personal"
+        role="tab"
+        aria-selected={initialCategory === 'personal' ? 'true' : 'false'}
+      >
+        PERSONAL <span class="filter-count">({personalCount})</span>
+      </button>
+      <button
+        class={`works-filter-btn ${initialCategory === 'commission' ? 'active' : ''}`}
+        data-filter="commission"
+        role="tab"
+        aria-selected={initialCategory === 'commission' ? 'true' : 'false'}
+      >
+        COMMISSION <span class="filter-count">({commissionCount})</span>
+      </button>
+    </div>
+  )}
+
+  <!-- Works Grid -->
+  <div class="works-grid">
+    {works.map((work) => {
+      const displayTitle = work.data.title?.trim() || 'untitled';
+      return (
+        <a
+          href={`/works/${work.id}`}
+          class="work-card"
+          data-category={work.data.category}
+          aria-label={displayTitle}
+        >
+          <div class="work-image-wrapper">
+            <Image
+              src={work.data.cover}
+              alt={displayTitle}
+              width={600}
+              height={450}
+              format="webp"
+              quality={80}
+              loading="lazy"
+              decoding="async"
+              class="work-thumb"
+            />
+          </div>
+          <div class="work-card-info">
+            <span class="work-card-title">{displayTitle}</span>
+            <span class="work-card-category">{work.data.category}</span>
+          </div>
+        </a>
+      );
+    })}
+  </div>
+
+  <!-- Empty state fallback if a category has no items -->
+  <div class="works-empty is-hidden" id="works-empty-state">
+    No artworks found in this category.
+  </div>
+
+  <!-- View All button on homepage -->
+  {isHome && limit && allWorks.length > limit && (
+    <div class="view-more">
+      <a href="/works">VIEW ALL WORKS &rarr;</a>
+    </div>
+  )}
+</div>
+
+<style>
+  .works-container {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .works-filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .works-filter-btn {
+    padding: 6px 14px;
+    background: #fff;
+    border: 1px solid #ccc;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    color: #333;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .works-filter-btn:hover {
+    background-color: #37c13e;
+    color: #fff;
+    border-color: #37c13e;
+  }
+
+  .works-filter-btn.active {
+    background-color: #222;
+    color: #fff;
+    border-color: #222;
+  }
+
+  .filter-count {
+    font-size: 0.75rem;
+    opacity: 0.8;
+  }
+
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .work-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    background: #fff;
+    text-decoration: none;
+    color: inherit;
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    animation: cardEntrance 0.3s ease-out;
+  }
+
+  .work-card:hover {
+    transform: translateY(-3px);
+    border-color: #333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .is-hidden {
+    display: none !important;
+  }
+
+  .work-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background-color: #f0f0f0;
+  }
+
+  .work-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease;
+  }
+
+  .work-card:hover .work-thumb {
+    transform: scale(1.05);
+  }
+
+  .work-card-info {
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: #fff;
+    border-top: 1px solid #eee;
+  }
+
+  .work-card-title {
+    font-weight: bold;
+    font-size: 0.95rem;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .work-card-category {
+    font-size: 0.75rem;
+    color: #888;
+    text-transform: capitalize;
+  }
+
+  .works-empty {
+    padding: 40px;
+    text-align: center;
+    color: #888;
+    border: 1px dashed #ccc;
+    background: #fafafa;
+    margin-top: 10px;
+  }
+
+  .view-more {
+    margin-top: 20px;
+    text-align: right;
+  }
+
+  .view-more a {
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    transition: color 0.2s ease;
+  }
+
+  .view-more a:hover {
+    color: #37c13e;
+  }
+
+  @keyframes cardEntrance {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .works-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .works-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .work-card-title {
+      font-size: 0.85rem;
+    }
+    .work-card-info {
+      padding: 8px;
+    }
+  }
+</style>
+
+<script>
+  function setupWorksFilter() {
+    const filterButtons = document.querySelectorAll<HTMLButtonElement>('.works-filter-bar button.works-filter-btn');
+    const workCards = document.querySelectorAll<HTMLElement>('.work-card');
+    const emptyState = document.getElementById('works-empty-state');
+
+    if (filterButtons.length === 0) return;
+
+    function applyFilter(selectedFilter: string) {
+      filterButtons.forEach((b) => {
+        const isActive = (b.dataset.filter || 'all') === selectedFilter;
+        b.classList.toggle('active', isActive);
+        b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+
+      let visibleCount = 0;
+      workCards.forEach((card) => {
+        const cardCategory = card.dataset.category;
+        if (selectedFilter === 'all' || cardCategory === selectedFilter) {
+          card.classList.remove('is-hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('is-hidden');
+        }
+      });
+
+      if (emptyState) {
+        if (visibleCount === 0) {
+          emptyState.classList.remove('is-hidden');
+        } else {
+          emptyState.classList.add('is-hidden');
+        }
+      }
+    }
+
+    // Read initial category from URL query parameters (e.g. ?category=personal)
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryParam = urlParams.get('category');
+    if (categoryParam && (categoryParam === 'personal' || categoryParam === 'commission')) {
+      applyFilter(categoryParam);
+    }
+
+    filterButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const selectedFilter = btn.dataset.filter || 'all';
+        applyFilter(selectedFilter);
+
+        // Update URL query parameter without full reload
+        const newUrl = new URL(window.location.href);
+        if (selectedFilter === 'all') {
+          newUrl.searchParams.delete('category');
+        } else {
+          newUrl.searchParams.set('category', selectedFilter);
+        }
+        window.history.replaceState({}, '', newUrl.toString());
+      });
+    });
+  }
+
+  setupWorksFilter();
+  document.addEventListener('astro:page-load', setupWorksFilter);
+</script>

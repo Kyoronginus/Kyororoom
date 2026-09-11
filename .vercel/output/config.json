@@ -44,6 +44,14 @@
 			"dest": "_render"
 		},
 		{
+			"src": "^/works/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/works(?:/(.*?))?/?$",
+			"dest": "_render"
+		},
+		{
 			"src": "^/$",
 			"dest": "_render"
 		},

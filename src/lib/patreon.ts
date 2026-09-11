@@ -30,6 +30,11 @@ let cachedCampaignId: string | null =
   import.meta.env.PATREON_CAMPAIGN_ID ||
   null;
 
+// In-memory cache for posts and members to prevent blocking SSR on homepage
+let cachedPostsData: { data: PatreonPost[]; expiresAt: number } | null = null;
+let cachedMembersData: { data: PatronMember[]; expiresAt: number } | null = null;
+const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
+
 export async function getPatreonAccessToken(forceRefresh = false): Promise<string | null> {
   const now = Date.now();
 
@@ -123,18 +128,23 @@ export async function fetchWithPatreonAuth(url: string): Promise<Response | null
   return res;
 }
 
-export async function fetchLatestPosts(): Promise<PatreonPost[]> {
+export async function fetchLatestPosts(forceRefresh = false): Promise<PatreonPost[]> {
+  const now = Date.now();
+  if (!forceRefresh && cachedPostsData && now < cachedPostsData.expiresAt) {
+    return cachedPostsData.data;
+  }
+
   const token = await getPatreonAccessToken();
-  if (!token) return [];
+  if (!token) return cachedPostsData ? cachedPostsData.data : [];
 
   const campaignId = await getPatreonCampaignId(token);
-  if (!campaignId) return [];
+  if (!campaignId) return cachedPostsData ? cachedPostsData.data : [];
 
   // Patreon API v2 returns posts in ascending (oldest-first) order and ignores sort parameters.
   // We fetch up to 100 posts, then sort descending by published_at in code.
   const postsUrl = `${PATREON_API_BASE}/campaigns/${campaignId}/posts?page[count]=100&fields[post]=title,content,published_at,url,is_public,embed_data`;
   const res = await fetchWithPatreonAuth(postsUrl);
-  if (!res || !res.ok) return [];
+  if (!res || !res.ok) return cachedPostsData ? cachedPostsData.data : [];
 
   const json = await res.json();
   const allPosts = json.data || [];
@@ -201,20 +211,29 @@ export async function fetchLatestPosts(): Promise<PatreonPost[]> {
     })
   );
 
-  return posts;
+  if (posts.length > 0) {
+    cachedPostsData = { data: posts, expiresAt: now + CACHE_TTL_MS };
+  }
+
+  return posts.length > 0 ? posts : (cachedPostsData ? cachedPostsData.data : []);
 }
 
-export async function fetchActiveMembers(): Promise<PatronMember[]> {
+export async function fetchActiveMembers(forceRefresh = false): Promise<PatronMember[]> {
+  const now = Date.now();
+  if (!forceRefresh && cachedMembersData && now < cachedMembersData.expiresAt) {
+    return cachedMembersData.data;
+  }
+
   const token = await getPatreonAccessToken();
-  if (!token) return [];
+  if (!token) return cachedMembersData ? cachedMembersData.data : [];
 
   const campaignId = await getPatreonCampaignId(token);
-  if (!campaignId) return [];
+  if (!campaignId) return cachedMembersData ? cachedMembersData.data : [];
 
   const membersUrl = `${PATREON_API_BASE}/campaigns/${campaignId}/members?page[count]=100&include=user&fields[member]=patron_status,full_name&fields[user]=full_name,vanity&filter[is_active]=true`;
 
   const res = await fetchWithPatreonAuth(membersUrl);
-  if (!res || !res.ok) return [];
+  if (!res || !res.ok) return cachedMembersData ? cachedMembersData.data : [];
 
   const json = await res.json();
   const activeMembers: PatronMember[] = [];
@@ -227,5 +246,9 @@ export async function fetchActiveMembers(): Promise<PatronMember[]> {
     }
   });
 
-  return activeMembers;
+  if (activeMembers.length > 0) {
+    cachedMembersData = { data: activeMembers, expiresAt: now + CACHE_TTL_MS };
+  }
+
+  return activeMembers.length > 0 ? activeMembers : (cachedMembersData ? cachedMembersData.data : []);
 }
