@@ -1,7 +1,5 @@
 ---
-import "../styles/global.css";
-import SmoothScroll from "../components/common/SmoothScroll.astro";
-import MorphingTopo from "../components/common/MorphingTopo.tsx";
+import Layout from "../layouts/layout.astro";
 import Ticker from "../components/hero/Ticker.tsx";
 import HeroCarousel from "../components/hero/HeroCarousel.tsx";
 import AboutSection from "../components/about/AboutSection.astro";
@@ -13,8 +11,10 @@ import WorksGallery from "../components/works/WorksGallery.astro";
 import { fetchLatestPosts, fetchActiveMembers } from "../lib/patreon";
 import { siteConfig } from "../config/site";
 
-const initialPosts = await fetchLatestPosts();
-const initialMembers = await fetchActiveMembers();
+const [initialPosts, initialMembers] = await Promise.all([
+  fetchLatestPosts(),
+  fetchActiveMembers(),
+]);
 
 const initialTickerData = {
   commission: {
@@ -31,59 +31,14 @@ const initialTickerData = {
 };
 ---
 
-<!doctype html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/icon.png" />
-    <link rel="apple-touch-icon" href="/icon.png" />
-    <title>kyororoom</title>
-  </head>
+<Layout title="kyororoom">
+  <!-- TICKER  -->
+  <Ticker initialData={initialTickerData} client:load />
 
-  <body>
-    <SmoothScroll />
-    <MorphingTopo client:only="react" />
-    <!-- Navbar -->
-    <nav class="navbar">
-      <div class="logo">
-        <h2 class="my-0">
-          <a href="#home">KYOROROOM</a>
-        </h2>
-      </div>
-      <div class="nav-links">
-        <a href="#about">ABOUT</a>
-        <a href="#works">WORKS</a>
-        <a href="#blog">BLOG</a>
-        <a href="#contact">CONTACT</a>
-      </div>
-    </nav>
-
-    <!-- TICKER (流れる掲示板) -->
-    <Ticker initialData={initialTickerData} client:load />
-
-    <!-- HOME (横スクロールギャラリー) -->
+    <!-- HOME -->
     <section id="home">
       <HeroCarousel client:load />
     </section>
-    <script is:inline>
-      (function() {
-        function alignCarousel() {
-          const track = document.querySelector('.hero-carousel-track');
-          if (!track) return;
-          const items = track.querySelectorAll('.hero-carousel-item');
-          if (items.length >= 16) {
-            const singleSetWidth = items[8].offsetLeft - items[0].offsetLeft;
-            if (singleSetWidth > 0) {
-              track.scrollLeft = singleSetWidth;
-              track.classList.add('is-ready');
-            }
-          }
-        }
-        alignCarousel();
-        window.addEventListener('DOMContentLoaded', alignCarousel, { once: true });
-      })();
-    </script>
 
     <main>
        <div class="banner-container flex flex-wrap gap-2">
@@ -108,8 +63,8 @@ const initialTickerData = {
       <section id="blog">
         <h1>BLOG</h1>
         <!-- PATREON TICKER -->
-        <PatronTicker client:load initialMembers={initialMembers} />
-        <PatreonBlog client:load initialPosts={initialPosts} />
+        <PatronTicker client:visible initialMembers={initialMembers} />
+        <PatreonBlog client:visible initialPosts={initialPosts} />
       </section>
       
       <!-- PROJECTS -->
@@ -138,5 +93,4 @@ const initialTickerData = {
       setupScrollspy();
       document.addEventListener('astro:page-load', setupScrollspy);
     </script>
-  </body>
-</html>
+</Layout>

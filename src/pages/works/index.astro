@@ -1,9 +1,7 @@
 ---
 // src/pages/works/index.astro
-import MorphingTopo from '../../components/common/MorphingTopo';
-import SmoothScroll from '../../components/common/SmoothScroll.astro';
+import Layout from '../../layouts/layout.astro';
 import WorksGallery from '../../components/works/WorksGallery.astro';
-import '../../styles/global.css';
 
 const category = Astro.url.searchParams.get('category') || 'all';
 
@@ -15,41 +13,18 @@ if (import.meta.env.PROD) {
 }
 ---
 
-<!doctype html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WORKS - KYOROROOM</title>
-    <meta name="description" content="Artwork gallery by Kyoronginus - Personal and Commission illustrations." />
-  </head>
-  <body>
-    <SmoothScroll />
-    <MorphingTopo client:only="react" />
-
-    <!-- Navbar -->
-    <nav class="navbar">
-      <div class="logo">
-        <h2 class="my-0">
-          <a href="/#works" id="work-back-btn">BACK</a>
-        </h2>
-      </div>
-      <div class="nav-links">
-        <a href="/#about">ABOUT</a>
-        <a href="/#works">WORKS</a>
-        <a href="/#blog">BLOG</a>
-        <a href="/#contact">CONTACT</a>
-      </div>
-    </nav>
-
-    <main class="works-page-main">
-      <header class="works-page-header">
-        <h1 class="page-title">WORKS</h1>
-      </header>
-      <WorksGallery isHome={false} initialCategory={category} />
-    </main>
-  </body>
-</html>
+<Layout
+  title="WORKS - KYOROROOM"
+  description="Artwork gallery by Kyoronginus - Personal and Commission illustrations."
+  backHref="/#works"
+>
+  <main class="works-page-main">
+    <header class="works-page-header">
+      <h1 class="page-title">WORKS</h1>
+    </header>
+    <WorksGallery isHome={false} initialCategory={category} />
+  </main>
+</Layout>
 
 <style>
   .logo a {

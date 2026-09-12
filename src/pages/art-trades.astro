@@ -1,10 +1,10 @@
 ---
 // src/pages/art-trades.astro
+export const prerender = true;
+
 import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
-import MorphingTopo from '../components/common/MorphingTopo';
-import SmoothScroll from '../components/common/SmoothScroll.astro';
-import '../styles/global.css';
+import Layout from '../layouts/layout.astro';
 
 // Import all images from src/assets/artgifts
 const imageModules = import.meta.glob<{ default: ImageMetadata }>(
@@ -19,34 +19,12 @@ const images = Object.entries(imageModules).map(([path, mod]) => ({
 }));
 ---
 
-<!doctype html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ART TRADES & GIFTS</title>
-    <meta name="description" content="Art trade and gift gallery for Kyoronginus." />
-  </head>
-  <body>
-    <SmoothScroll />
-    <MorphingTopo client:only="react" />
-
-    <!-- Navbar -->
-    <nav class="navbar">
-      <div class="logo">
-        <h2 class="my-0">
-          <a href="/#contact" id="trade-back-btn">BACK</a>
-        </h2>
-      </div>
-      <div class="nav-links">
-        <a href="/#about">ABOUT</a>
-        <a href="/#works">WORKS</a>
-        <a href="/#blog">BLOG</a>
-        <a href="/#contact">CONTACT</a>
-      </div>
-    </nav>
-
-    <main class="trades-main">
+<Layout
+  title="ART TRADES & GIFTS - KYOROROOM"
+  description="Art trade and gift gallery for Kyoronginus."
+  backHref="/#contact"
+>
+  <main class="trades-main">
       <header class="trades-header">
         <h1 class="page-title">ART TRADES & GIFTS</h1>
       </header>
@@ -72,8 +50,7 @@ const images = Object.entries(imageModules).map(([path, mod]) => ({
     <footer class="footer text-center" style="margin-top: 60px; padding-bottom: 40px;">
       <p class="copyright">© 2026 Kyoronginus. All rights reserved.</p>
     </footer>
-  </body>
-</html>
+</Layout>
 
 <style>
   .trades-main {

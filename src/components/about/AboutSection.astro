@@ -7,6 +7,9 @@ import ArtWidget from "./ArtWidget.tsx";
 import "./AboutSection.css";
 import OcCard from "./OcCard.astro";
 import { siteConfig } from "../../config/site";
+import vennaImg from "../../assets/about/ocs/venna-1.png";
+import agniaImg from "../../assets/about/ocs/agnia-1.png";
+import agamenonImg from "../../assets/about/ocs/agamenon-1.png";
 
 const discordId = import.meta.env.DISCORD_ID;
 ---
@@ -50,16 +53,16 @@ const discordId = import.meta.env.DISCORD_ID;
         </a>
       </div>
       <div class="mt-4">
-        <SpotifyWidget client:load />
+        <SpotifyWidget client:visible />
       </div>
       <div class="mt-0">
-        <DiscordWidget client:load discordId={discordId} />
+        <DiscordWidget client:visible discordId={discordId} />
       </div>
       <div class="mt-0">
-        <GitHubWidget client:load username="Kyoronginus" />
+        <GitHubWidget client:visible username="Kyoronginus" />
       </div>
       <div class="mt-0">
-        <ArtWidget client:load />
+        <ArtWidget client:visible />
       </div>
     </div>
     <div class="about-right">
@@ -107,7 +110,7 @@ const discordId = import.meta.env.DISCORD_ID;
           name="Venna"
           tag="Dreamy shorty gaki"
           desc="Most belovedd"
-          src="/assets/About/OCs/venna-1.webp"
+          src={vennaImg}
           alt="Venna"
         />
 
@@ -115,7 +118,7 @@ const discordId = import.meta.env.DISCORD_ID;
           name="Agnia"
           tag=""
           desc="omw creating a game with her as the MC!!!"
-          src="/assets/About/OCs/agnia-1.webp"
+          src={agniaImg}
           alt="Agnia"
         />
 
@@ -123,7 +126,7 @@ const discordId = import.meta.env.DISCORD_ID;
           name="Still anon"
           tag=""
           desc="<- her younger bro"
-          src="/assets/About/OCs/agamenon-1.webp"
+          src={agamenonImg}
           alt="Agamenon"
         />
       </div>

@@ -24,6 +24,7 @@ export default function HeroCarousel() {
   const scrollStartRef = useRef(0);
   const hasDraggedRef = useRef(false);
   const isAdjustingRef = useRef(false);
+  const singleSetWidthRef = useRef<number>(0);
 
   // Position viewport to the middle set so scrolling can occur in both directions
   const initScrollPosition = useCallback(() => {
@@ -33,6 +34,7 @@ export default function HeroCarousel() {
     if (items.length >= images.length * 2) {
       const singleSetWidth = items[images.length].offsetLeft - items[0].offsetLeft;
       if (singleSetWidth > 0) {
+        singleSetWidthRef.current = singleSetWidth;
         track.scrollLeft = singleSetWidth;
         setIsReady(true);
       }
@@ -53,13 +55,8 @@ export default function HeroCarousel() {
   const handleScroll = () => {
     if (isAdjustingRef.current) return;
     const track = trackRef.current;
-    if (!track || images.length === 0) return;
-
-    const items = track.querySelectorAll<HTMLElement>('.hero-carousel-item');
-    if (items.length < images.length * 2) return;
-
-    const singleSetWidth = items[images.length].offsetLeft - items[0].offsetLeft;
-    if (singleSetWidth <= 0) return;
+    const singleSetWidth = singleSetWidthRef.current;
+    if (!track || singleSetWidth <= 0) return;
 
     // Scrolled past the middle set to the right -> wrap seamlessly back to middle
     if (track.scrollLeft >= singleSetWidth * 2) {
@@ -142,19 +139,27 @@ export default function HeroCarousel() {
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
       >
-        {TRIPLE_IMAGES.map((src, index) => (
-          <div
-            key={index}
-            className="hero-carousel-item"
-            onClick={handleItemClick}
-          >
-            <img
-              src={src}
-              alt={`Artwork ${(index % images.length) + 1}`}
-              draggable="false"
-            />
-          </div>
-        ))}
+        {TRIPLE_IMAGES.map((src, index) => {
+          // Middle set items (index images.length to images.length + 3) are visible initially
+          const isInitialVisible = index >= images.length && index < images.length + 3;
+          return (
+            <div
+              key={index}
+              className="hero-carousel-item"
+              onClick={handleItemClick}
+            >
+              <img
+                src={src}
+                alt={`Artwork ${(index % images.length) + 1}`}
+                draggable="false"
+                width={300}
+                height={400}
+                loading={isInitialVisible ? 'eager' : 'lazy'}
+                decoding={isInitialVisible ? 'sync' : 'async'}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

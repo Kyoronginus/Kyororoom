@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
 @import "tailwindcss";
 @import "lenis/dist/lenis.css";
 
@@ -67,7 +66,7 @@ ol {
 
 h2 {
   font-size: 1.2rem;
-  color: #666;
+  color: #525252;
   text-transform: uppercase;
 }
 
@@ -94,7 +93,7 @@ h2 {
 .nav-links a {
   position: relative;
   text-decoration: none;
-  color: #666;
+  color: #525252;
   font-weight: bold;
   font-size: 0.9rem;
   letter-spacing: 0.05em;
