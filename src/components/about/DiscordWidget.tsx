@@ -42,7 +42,7 @@ export default function DiscordWidget({ discordId }: { discordId: string }) {
     <div className="discord-widget widget">
       <div className="discord-header">
         <span className="status-dot" style={{ backgroundColor: statusColor }}></span>
-        <span>DISCORD STATUS</span>
+        <span>STATUS</span>
       </div>
       <div className="discord-body">
         <span className="status-text">{data?.discord_status ? data.discord_status.toUpperCase() : 'LOADING...'}</span>
