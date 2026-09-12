@@ -13,7 +13,7 @@
 
     const lenis = new Lenis({
       autoRaf: true,
-      anchors: true,
+      anchors: false,
       smoothWheel: true,
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -39,7 +39,6 @@
         if (target) {
           e.preventDefault();
           lenis.scrollTo(target as HTMLElement);
-          history.pushState(null, '', href);
         }
       }
     });
@@ -51,6 +50,7 @@
           const target = document.querySelector(window.location.hash);
           if (target) {
             lenis.scrollTo(target as HTMLElement);
+            history.replaceState(null, '', window.location.pathname);
           }
         } catch {
           // Ignore invalid selector
