@@ -1,5 +1,8 @@
 ---
 // src/components/common/Navbar.astro
+import { Image } from 'astro:assets';
+import titleSvg from '../../assets/title.svg';
+
 interface Props {
   backHref?: string;
   logoHref?: string;
@@ -15,9 +18,17 @@ const effectiveLogoHref = logoHref || defaultLogoHref;
   <div class="logo">
     <div class="logo-title my-0">
       {backHref ? (
-        <a href={backHref} id="nav-back-btn">BACK</a>
+        <a href={backHref} id="nav-back-btn">&larr; BACK</a>
       ) : (
-        <a href={effectiveLogoHref}>KYOROROOM</a>
+        <a href={effectiveLogoHref} class="logo-img-link" aria-label="KYOROROOM Home">
+          <Image
+            src={titleSvg}
+            alt="KYOROROOM"
+            height={44}
+            class="logo-img"
+            loading="eager"
+          />
+        </a>
       )}
     </div>
   </div>
@@ -34,13 +45,32 @@ const effectiveLogoHref = logoHref || defaultLogoHref;
     font-size: 1.2rem;
     font-weight: bold;
     text-transform: uppercase;
+    display: flex;
+    align-items: center;
   }
   .logo a {
     text-decoration: none;
     color: inherit;
     transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
   }
   .logo a:hover {
     color: #111;
+  }
+  .logo-img-link {
+    display: inline-flex;
+    align-items: center;
+    line-height: 0;
+  }
+  .logo-img {
+    height: 44px;
+    width: auto;
+    object-fit: contain;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .logo-img-link:hover .logo-img {
+    opacity: 0.85;
+    transform: scale(1.02);
   }
 </style>
