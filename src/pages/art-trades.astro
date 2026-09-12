@@ -46,18 +46,6 @@ const images = Object.entries(imageModules).map(([path, mod]) => ({
       </div>
     </nav>
 
-    <script is:inline>
-      const backBtn = document.getElementById('trade-back-btn');
-      if (backBtn) {
-        backBtn.addEventListener('click', (e) => {
-          if (window.history.length > 1 && document.referrer && new URL(document.referrer).origin === window.location.origin) {
-            e.preventDefault();
-            window.history.back();
-          }
-        });
-      }
-    </script>
-
     <main class="trades-main">
       <header class="trades-header">
         <h1 class="page-title">ART TRADES & GIFTS</h1>

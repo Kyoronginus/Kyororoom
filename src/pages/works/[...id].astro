@@ -56,26 +56,11 @@ if (import.meta.env.PROD) {
       </div>
       <div class="nav-links">
         <a href="/#about">ABOUT</a>
-        <a href="/#blog">BLOG</a>
         <a href="/#works">WORKS</a>
-        <a href="/#projects">PROJECTS</a>
+        <a href="/#blog">BLOG</a>
         <a href="/#contact">CONTACT</a>
       </div>
     </nav>
-
-    <script is:inline>
-      const backBtn = document.getElementById('work-back-btn');
-      if (backBtn) {
-        backBtn.addEventListener('click', (e) => {
-          // If the user navigated from the home page / same site, use history.back()
-          // This allows the browser to restore the exact scroll position and state instantly from BFCache
-          if (window.history.length > 1 && document.referrer && new URL(document.referrer).origin === window.location.origin) {
-            e.preventDefault();
-            window.history.back();
-          }
-        });
-      }
-    </script>
 
     <main class="detail-main">
       <!-- Artwork Display -->

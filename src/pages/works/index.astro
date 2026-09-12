@@ -36,24 +36,11 @@ if (import.meta.env.PROD) {
       </div>
       <div class="nav-links">
         <a href="/#about">ABOUT</a>
-        <a href="/#blog">BLOG</a>
         <a href="/#works">WORKS</a>
-        <a href="/#projects">PROJECTS</a>
+        <a href="/#blog">BLOG</a>
         <a href="/#contact">CONTACT</a>
       </div>
     </nav>
-
-    <script is:inline>
-      const backBtn = document.getElementById('work-back-btn');
-      if (backBtn) {
-        backBtn.addEventListener('click', (e) => {
-          if (window.history.length > 1 && document.referrer && new URL(document.referrer).origin === window.location.origin) {
-            e.preventDefault();
-            window.history.back();
-          }
-        });
-      }
-    </script>
 
     <main class="works-page-main">
       <header class="works-page-header">
