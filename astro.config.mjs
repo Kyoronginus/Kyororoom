@@ -7,6 +7,7 @@ import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://www.kyoronginus.com',
   output: 'server',
   adapter: vercel(),
   integrations: [react()],

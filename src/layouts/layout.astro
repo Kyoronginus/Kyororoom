@@ -8,14 +8,20 @@ import MorphingTopo from "../components/common/MorphingTopo.tsx";
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
   backHref?: string;
 }
 
 const {
-  title = "kyororoom",
-  description = "Kyororoom - Portfolio and Blog",
+  title = "Kyororoom",
+  description = "Kyoronginus' website.",
+  image = "/assets/og-image.png",
   backHref,
 } = Astro.props;
+
+const siteUrl = Astro.site?.origin || "https://www.kyoronginus.com";
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+const ogImageUrl = new URL(image, siteUrl).href;
 ---
 
 <!doctype html>
@@ -23,10 +29,29 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" type="image/png" href="/icon.png" />
     <link rel="apple-touch-icon" href="/icon.png" />
-    <title>{title}</title>
+
+    <!-- Open Graph / Discord / Social Previews -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="675" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- Fonts & Preloads -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" />
