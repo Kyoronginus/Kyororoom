@@ -2,6 +2,12 @@
 // src/components/contact/ContactSection.astro
 import VisitorCounter from './VisitorCounter.tsx';
 import './ContactSection.css';
+
+interface Props {
+  initialViews?: number;
+}
+
+const { initialViews } = Astro.props;
 ---
 
 <section id="contact">
@@ -225,6 +231,6 @@ import './ContactSection.css';
     <a href="/art-trades" class="badge-btn">Art trade gallery</a>
   </div>
   <div class="counter-wrapper">
-    <VisitorCounter client:visible />
+    <VisitorCounter client:visible initialViews={initialViews} />
   </div>
 </section>

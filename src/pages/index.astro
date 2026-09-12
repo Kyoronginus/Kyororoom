@@ -9,11 +9,13 @@ import PatreonBlog from "../components/blog/PatreonBlog.tsx";
 import PatronTicker from "../components/hero/PatronTicker.tsx";
 import WorksGallery from "../components/works/WorksGallery.astro";
 import { fetchLatestPosts, fetchActiveMembers } from "../lib/patreon";
+import { getOrIncrementViews } from "../lib/views";
 import { siteConfig } from "../config/site";
 
-const [initialPosts, initialMembers] = await Promise.all([
+const [initialPosts, initialMembers, initialViews] = await Promise.all([
   fetchLatestPosts(),
   fetchActiveMembers(),
+  getOrIncrementViews(),
 ]);
 
 const initialTickerData = {
@@ -81,7 +83,7 @@ const initialTickerData = {
       </section>
 
       <!-- CONTACTS -->
-      <ContactSection />
+      <ContactSection initialViews={initialViews} />
 
       <footer class="footer text-center">
         <p class="copyright">© 2026 Kyoronginus. All rights reserved.</p>

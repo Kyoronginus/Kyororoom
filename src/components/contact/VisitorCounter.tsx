@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import './VisitorCounter.css';
 
-export default function VisitorCounter() {
-  const [views, setViews] = useState<number | null>(null);
+interface VisitorCounterProps {
+  initialViews?: number;
+}
+
+export default function VisitorCounter({ initialViews }: VisitorCounterProps) {
+  const [views, setViews] = useState<number | null>(
+    typeof initialViews === 'number' ? initialViews : null
+  );
 
   useEffect(() => {
+    if (typeof initialViews === 'number') {
+      return;
+    }
+
     const fetchViews = async () => {
       try {
         const res = await fetch('/api/views');
@@ -17,7 +27,7 @@ export default function VisitorCounter() {
       }
     };
     fetchViews();
-  }, []);
+  }, [initialViews]);
 
   return (
     <div className="visitor-counter widget">
