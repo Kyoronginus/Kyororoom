@@ -3,6 +3,7 @@
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import { getWorkAccentColor } from '../../utils/palette';
+import { sortWorks } from '../../utils/works';
 
 interface Props {
   limit?: number;
@@ -12,11 +13,7 @@ interface Props {
 
 const { limit, isHome = false, initialCategory = 'all' } = Astro.props;
 
-const allWorks = (await getCollection('works')).sort(
-  (a, b) =>
-    new Date(b.data.date).getTime() - new Date(a.data.date).getTime() ||
-    b.id.localeCompare(a.id)
-);
+const allWorks = sortWorks(await getCollection('works'));
 
 const personalCount = allWorks.filter((w) => w.data.category === 'personal').length;
 const commissionCount = allWorks.filter((w) => w.data.category === 'commission').length;

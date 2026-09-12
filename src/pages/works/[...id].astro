@@ -5,6 +5,7 @@ export const prerender = true;
 import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import Layout from '../../layouts/layout.astro';
+import { sortWorks } from '../../utils/works';
 
 export async function getStaticPaths() {
   const allWorks = await getCollection('works');
@@ -22,12 +23,8 @@ if (!work) {
 
 const { Content } = await render(work);
 
-// Navigation links between works
-const sortedWorks = allWorks.sort(
-  (a, b) =>
-    new Date(b.data.date).getTime() - new Date(a.data.date).getTime() ||
-    b.id.localeCompare(a.id)
-);
+// Navigation links between works according to curated sequence
+const sortedWorks = sortWorks(allWorks);
 const currentIndex = sortedWorks.findIndex((w) => w.id === work.id);
 const prevWork = currentIndex > 0 ? sortedWorks[currentIndex - 1] : null;
 const nextWork = currentIndex < sortedWorks.length - 1 ? sortedWorks[currentIndex + 1] : null;

@@ -1,0 +1,1386 @@
+---
+// src/pages/admin.astro
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/layout.astro';
+import { sortWorks } from '../utils/works';
+
+// Strict production guard: disable in production
+if (import.meta.env.PROD) {
+  return Astro.redirect('/');
+}
+
+const allWorks = sortWorks(await getCollection('works'));
+
+const worksData = allWorks.map((w) => ({
+  id: w.id,
+  title: w.data.title || 'untitled',
+  category: w.data.category,
+  date: w.data.date,
+  tags: w.data.tags || [],
+  client: w.data.client || '',
+  coverSrc: w.data.cover.src,
+  body: w.body || '',
+}));
+
+const today = new Date().toISOString().split('T')[0];
+---
+
+<Layout title="ADMIN - KYOROROOM" backHref="/">
+  <main class="admin-container">
+    <header class="admin-header">
+      <div class="header-badge">LOCAL DEV ONLY</div>
+      <h1 class="admin-title">ARTWORK MANAGER</h1>
+      <p class="admin-sub">Upload new artwork, edit catalog entries, or drag to reorder display sequence.</p>
+    </header>
+
+    <!-- TAB BUTTONS -->
+    <div class="admin-tabs" role="tablist">
+      <button type="button" class="tab-btn active" id="tab-btn-reorder" data-tab="reorder">
+        REORDER SEQUENCE ({allWorks.length})
+      </button>
+      <button type="button" class="tab-btn" id="tab-btn-create" data-tab="create">
+        + ADD NEW ARTWORK
+      </button>
+      <button type="button" class="tab-btn" id="tab-btn-edit" data-tab="edit">
+        EDIT EXISTING ({allWorks.length})
+      </button>
+    </div>
+
+    <!-- REORDER PANEL -->
+    <section id="panel-reorder" class="admin-panel active">
+      <div class="reorder-header-row">
+        <div>
+          <h2 class="section-heading">DRAG &amp; DROP TO REORDER</h2>
+          <p class="section-subtext">The public gallery will display artworks in this exact sequence (#1 is top-left).</p>
+        </div>
+        <div class="reorder-actions-top">
+          <button type="button" id="reorder-save-btn" class="submit-btn-accent">SAVE SEQUENCE</button>
+        </div>
+      </div>
+
+      <div class="form-checkbox-wrap" style="margin: 14px 0 20px 0;">
+        <label class="checkbox-label">
+          <input type="checkbox" id="reorder-autodeploy" value="true" checked />
+          <span class="checkbox-custom"></span>
+          <span><strong>Auto-Deploy:</strong> Commit sequence changes and push to GitHub (triggers Vercel build)</span>
+        </label>
+      </div>
+
+      <div class="reorder-grid" id="reorder-list">
+        {allWorks.map((w, idx) => (
+          <div class="reorder-card" draggable="true" data-id={w.id} id={`card-${w.id.replace(/\//g, '-')}`}>
+            <div class="reorder-rank-badge">#{idx + 1}</div>
+            <div class="reorder-thumb-wrap">
+              <img src={w.data.cover.src} alt={w.data.title || 'untitled'} class="reorder-thumb" loading="lazy" />
+            </div>
+            <div class="reorder-info">
+              <span class="reorder-title">{w.data.title || 'untitled'}</span>
+              <span class="reorder-id">{w.id}</span>
+              <span class={`reorder-cat badge-${w.data.category}`}>{w.data.category.toUpperCase()}</span>
+            </div>
+            <div class="reorder-handle" title="Drag card to reorder">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="5" r="1.5"></circle>
+                <circle cx="9" cy="12" r="1.5"></circle>
+                <circle cx="9" cy="19" r="1.5"></circle>
+                <circle cx="15" cy="5" r="1.5"></circle>
+                <circle cx="15" cy="12" r="1.5"></circle>
+                <circle cx="15" cy="19" r="1.5"></circle>
+              </svg>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="reorder-bottom-bar">
+        <button type="button" id="reorder-save-btn-bottom" class="submit-btn-accent">SAVE SEQUENCE</button>
+      </div>
+    </section>
+
+    <!-- CREATE FORM -->
+    <section id="panel-create" class="admin-panel is-hidden">
+      <form id="create-form" class="admin-form">
+        <input type="hidden" name="action" value="create" />
+
+        <!-- Image Dropzone -->
+        <div class="form-group">
+          <label class="form-label">Artwork Image *</label>
+          <div class="dropzone" id="create-dropzone">
+            <input type="file" id="create-file-input" name="file" accept="image/*" class="file-input-hidden" required />
+            <div class="dropzone-prompt" id="create-prompt">
+              <span class="dropzone-icon">+</span>
+              <span class="dropzone-text">Click or drag & drop artwork image here</span>
+              <span class="dropzone-hint">Supports PNG, JPG, WebP</span>
+            </div>
+            <div class="preview-container is-hidden" id="create-preview-wrap">
+              <img id="create-preview-img" src="" alt="Preview" class="preview-thumb" />
+              <div class="preview-meta">
+                <span id="create-preview-name" class="preview-name">filename.png</span>
+                <span id="create-preview-size" class="preview-size">0 KB</span>
+                <button type="button" id="create-remove-file" class="btn-text-danger">Remove</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <!-- Title -->
+          <div class="form-group">
+            <label class="form-label" for="create-title">Artwork Title</label>
+            <input type="text" id="create-title" name="title" placeholder="untitled" class="form-input" />
+          </div>
+
+          <!-- Category -->
+          <div class="form-group">
+            <label class="form-label" for="create-category">Category *</label>
+            <select id="create-category" name="category" class="form-select" required>
+              <option value="commission">Commission</option>
+              <option value="personal">Personal</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <!-- Folder -->
+          <div class="form-group">
+            <label class="form-label" for="create-folder">Target Folder</label>
+            <select id="create-folder" name="folder" class="form-select">
+              <option value="commission">commission (src/content/works/commission/)</option>
+              <option value="fanart">fanart (src/content/works/fanart/)</option>
+              <option value="oc/venna">oc/venna (src/content/works/oc/venna/)</option>
+              <option value="oc/agnia">oc/agnia (src/content/works/oc/agnia/)</option>
+              <option value="root">root (src/content/works/)</option>
+            </select>
+          </div>
+
+          <!-- Slug / Number -->
+          <div class="form-group">
+            <label class="form-label" for="create-slug">File Name / Number (Leave empty to auto-increment)</label>
+            <input type="text" id="create-slug" name="slug" placeholder="e.g. 10" class="form-input" />
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <!-- Date -->
+          <div class="form-group">
+            <label class="form-label" for="create-date">Release Date</label>
+            <input type="date" id="create-date" name="date" value={today} class="form-input" required />
+          </div>
+
+          <!-- Client (Optional) -->
+          <div class="form-group">
+            <label class="form-label" for="create-client">Client / Commissioner (Optional)</label>
+            <input type="text" id="create-client" name="client" placeholder="e.g. Private Client" class="form-input" />
+          </div>
+        </div>
+
+        <!-- Tags -->
+        <div class="form-group">
+          <label class="form-label" for="create-tags">Tags (Comma-separated)</label>
+          <input type="text" id="create-tags" name="tags" placeholder="commission, character, oc" class="form-input" />
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label class="form-label" for="create-desc">Description / Notes (Markdown)</label>
+          <textarea id="create-desc" name="description" rows="3" placeholder="Optional background or commentary..." class="form-textarea"></textarea>
+        </div>
+
+        <!-- Auto deploy option -->
+        <div class="form-checkbox-wrap">
+          <label class="checkbox-label">
+            <input type="checkbox" name="autoDeploy" value="true" checked />
+            <span class="checkbox-custom"></span>
+            <span><strong>Auto-Deploy:</strong> Commit changes and push to GitHub (triggers Vercel build)</span>
+          </label>
+        </div>
+
+        <button type="submit" class="submit-btn" id="create-submit-btn">
+          SAVE & CREATE ARTWORK
+        </button>
+      </form>
+    </section>
+
+    <!-- EDIT FORM -->
+    <section id="panel-edit" class="admin-panel is-hidden">
+      <div class="edit-section-header">
+        <div>
+          <h2 class="section-heading">SELECT ARTWORK TO EDIT</h2>
+          <p class="section-subtext">Click any artwork thumbnail card to load its details into the editor below.</p>
+        </div>
+      </div>
+
+      <div class="select-work-bar">
+        <label class="form-label" for="edit-work-select">Quick Dropdown Search:</label>
+        <select id="edit-work-select" class="form-select select-work-input">
+          <option value="">-- Choose an artwork ({allWorks.length} available) --</option>
+          {allWorks.map((w) => (
+            <option value={w.id}>
+              [{w.data.category.toUpperCase()}] {w.id} - {w.data.title || 'untitled'} ({w.data.date})
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <!-- 4-per-row Visual Thumbnail Picker -->
+      <div class="edit-selector-grid" id="edit-selector-list">
+        {allWorks.map((w) => (
+          <div class="edit-select-card" data-id={w.id} role="button" tabindex="0" title={`Click to edit: ${w.data.title || 'untitled'} (${w.id})`}>
+            <div class="edit-select-thumb-wrap">
+              <img src={w.data.cover.src} alt={w.data.title || 'untitled'} class="edit-select-thumb" loading="lazy" />
+            </div>
+            <div class="edit-select-info">
+              <span class="edit-select-title">{w.data.title || 'untitled'}</span>
+              <div class="edit-select-meta">
+                <span class="edit-select-id">{w.id}</span>
+                <span class={`reorder-cat badge-${w.data.category}`}>{w.data.category.toUpperCase()}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <form id="edit-form" class="admin-form is-hidden">
+        <input type="hidden" name="action" value="update" />
+        <input type="hidden" id="edit-work-id" name="workId" value="" />
+
+        <!-- Current Artwork Image Preview & Replace -->
+        <div class="form-group">
+          <label class="form-label">Artwork Cover Image</label>
+          <div class="edit-cover-row">
+            <div class="current-cover-box">
+              <span class="cover-box-label">Current:</span>
+              <img id="edit-current-img" src="" alt="Current artwork" class="edit-thumb" />
+            </div>
+            <div class="replace-dropzone dropzone" id="edit-dropzone">
+              <input type="file" id="edit-file-input" name="file" accept="image/*" class="file-input-hidden" />
+              <div class="dropzone-prompt" id="edit-prompt">
+                <span class="dropzone-icon">+</span>
+                <span class="dropzone-text">Click or drop new file to replace cover</span>
+                <span class="dropzone-hint">Leave blank to keep existing image</span>
+              </div>
+              <div class="preview-container is-hidden" id="edit-preview-wrap">
+                <img id="edit-preview-img" src="" alt="New Preview" class="preview-thumb" />
+                <div class="preview-meta">
+                  <span id="edit-preview-name" class="preview-name">replacement.png</span>
+                  <button type="button" id="edit-remove-file" class="btn-text-danger">Cancel replacement</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <!-- Title -->
+          <div class="form-group">
+            <label class="form-label" for="edit-title">Title</label>
+            <input type="text" id="edit-title" name="title" class="form-input" required />
+          </div>
+
+          <!-- Category -->
+          <div class="form-group">
+            <label class="form-label" for="edit-category">Category</label>
+            <select id="edit-category" name="category" class="form-select" required>
+              <option value="commission">Commission</option>
+              <option value="personal">Personal</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <!-- Date -->
+          <div class="form-group">
+            <label class="form-label" for="edit-date">Date</label>
+            <input type="date" id="edit-date" name="date" class="form-input" required />
+          </div>
+
+          <!-- Client -->
+          <div class="form-group">
+            <label class="form-label" for="edit-client">Client (Optional)</label>
+            <input type="text" id="edit-client" name="client" class="form-input" />
+          </div>
+        </div>
+
+        <!-- Tags -->
+        <div class="form-group">
+          <label class="form-label" for="edit-tags">Tags (Comma-separated)</label>
+          <input type="text" id="edit-tags" name="tags" class="form-input" />
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label class="form-label" for="edit-desc">Description (Markdown)</label>
+          <textarea id="edit-desc" name="description" rows="4" class="form-textarea"></textarea>
+        </div>
+
+        <!-- Auto deploy option -->
+        <div class="form-checkbox-wrap">
+          <label class="checkbox-label">
+            <input type="checkbox" name="autoDeploy" value="true" checked />
+            <span class="checkbox-custom"></span>
+            <span><strong>Auto-Deploy:</strong> Commit changes and push to GitHub (triggers Vercel build)</span>
+          </label>
+        </div>
+
+        <div class="form-actions-row">
+          <button type="submit" class="submit-btn" id="edit-submit-btn">
+            SAVE CHANGES
+          </button>
+          <a href="#" id="edit-view-link" target="_blank" class="preview-btn is-hidden">
+            VIEW ON SITE &rarr;
+          </a>
+        </div>
+      </form>
+    </section>
+
+    <!-- LIVE CONSOLE LOGS -->
+    <section class="console-section">
+      <div class="console-header">
+        <span>EXECUTION CONSOLE</span>
+        <button type="button" id="console-clear-btn" class="console-clear">Clear</button>
+      </div>
+      <div class="console-body" id="console-output">
+        <span class="console-placeholder">Awaiting action... Ready to upload or edit artwork.</span>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<!-- Client-side state & interactions -->
+<script define:vars={{ worksData }}>
+  // Store works catalog in client memory
+  const worksCatalog = new Map(worksData.map((w) => [w.id, w]));
+
+  const logBox = document.getElementById('console-output');
+
+  function appendLog(text, isError = false) {
+    if (!logBox) return;
+    const placeholder = logBox.querySelector('.console-placeholder');
+    if (placeholder) placeholder.remove();
+
+    const line = document.createElement('div');
+    line.className = isError ? 'console-line console-error' : 'console-line';
+    line.textContent = text;
+    logBox.appendChild(line);
+    logBox.scrollTop = logBox.scrollHeight;
+  }
+
+  // --- TABS TOGGLE (3 tabs) ---
+  const tabConfigs = [
+    { btn: document.getElementById('tab-btn-reorder'), panel: document.getElementById('panel-reorder') },
+    { btn: document.getElementById('tab-btn-create'), panel: document.getElementById('panel-create') },
+    { btn: document.getElementById('tab-btn-edit'), panel: document.getElementById('panel-edit') },
+  ];
+
+  tabConfigs.forEach(({ btn, panel }) => {
+    btn?.addEventListener('click', () => {
+      tabConfigs.forEach((t) => {
+        t.btn?.classList.remove('active');
+        t.panel?.classList.add('is-hidden');
+      });
+      btn.classList.add('active');
+      panel?.classList.remove('is-hidden');
+    });
+  });
+
+  // --- REORDER DRAG & DROP SETUP ---
+  const reorderList = document.getElementById('reorder-list');
+  let draggedCard = null;
+
+  function updateRankBadges() {
+    if (!reorderList) return;
+    const cards = reorderList.querySelectorAll('.reorder-card');
+    cards.forEach((card, index) => {
+      const badge = card.querySelector('.reorder-rank-badge');
+      if (badge) badge.textContent = `#${index + 1}`;
+    });
+  }
+
+  if (reorderList) {
+    reorderList.addEventListener('dragstart', (e) => {
+      const card = e.target.closest('.reorder-card');
+      if (!card) return;
+      draggedCard = card;
+      card.classList.add('is-dragging');
+      if (e.dataTransfer) {
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', card.dataset.id || '');
+      }
+    });
+
+    reorderList.addEventListener('dragend', (e) => {
+      const card = e.target.closest('.reorder-card');
+      if (card) card.classList.remove('is-dragging');
+      document.querySelectorAll('.reorder-card').forEach((c) => c.classList.remove('drag-over'));
+      draggedCard = null;
+      updateRankBadges();
+    });
+
+    reorderList.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+      if (!draggedCard) return;
+
+      const targetCard = e.target.closest('.reorder-card');
+      if (!targetCard || targetCard === draggedCard) return;
+
+      const rect = targetCard.getBoundingClientRect();
+      const isAfter =
+        (e.clientY - rect.top) / (rect.bottom - rect.top) > 0.5 ||
+        (e.clientX - rect.left) / (rect.right - rect.left) > 0.5;
+
+      if (isAfter) {
+        targetCard.after(draggedCard);
+      } else {
+        targetCard.before(draggedCard);
+      }
+      updateRankBadges();
+    });
+  }
+
+  // --- SAVE REORDER SEQUENCE ---
+  async function saveArtworkSequence() {
+    if (!reorderList) return;
+    const cards = reorderList.querySelectorAll('.reorder-card');
+    const order = Array.from(cards).map((c) => c.dataset.id).filter(Boolean);
+    const autoDeployCheckbox = document.getElementById('reorder-autodeploy');
+    const autoDeploy = autoDeployCheckbox ? autoDeployCheckbox.checked : false;
+
+    const btns = [
+      document.getElementById('reorder-save-btn'),
+      document.getElementById('reorder-save-btn-bottom'),
+    ];
+
+    btns.forEach((b) => {
+      if (b) {
+        b.disabled = true;
+        b.textContent = 'SAVING...';
+      }
+    });
+
+    appendLog(`Saving new gallery sequence (${order.length} artworks)...`);
+
+    try {
+      const formData = new FormData();
+      formData.append('action', 'reorder');
+      formData.append('order', JSON.stringify(order));
+      formData.append('autoDeploy', autoDeploy ? 'true' : 'false');
+
+      const res = await fetch('/api/admin/works', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || 'Failed to save artwork sequence');
+      }
+
+      if (Array.isArray(data.logs)) {
+        data.logs.forEach((msg) => appendLog(msg));
+      }
+      appendLog(`SUCCESS: ${data.message}`);
+      alert(`Gallery sequence saved successfully! (${order.length} artworks)`);
+    } catch (err) {
+      appendLog(`ERROR: ${err.message}`, true);
+      alert(`Error saving sequence: ${err.message}`);
+    } finally {
+      btns.forEach((b) => {
+        if (b) {
+          b.disabled = false;
+          b.textContent = 'SAVE SEQUENCE';
+        }
+      });
+    }
+  }
+
+  document.getElementById('reorder-save-btn')?.addEventListener('click', saveArtworkSequence);
+  document.getElementById('reorder-save-btn-bottom')?.addEventListener('click', saveArtworkSequence);
+
+  // --- CREATE DROPZONE SETUP ---
+  const createDropzone = document.getElementById('create-dropzone');
+  const createFileInput = document.getElementById('create-file-input');
+  const createPrompt = document.getElementById('create-prompt');
+  const createPreviewWrap = document.getElementById('create-preview-wrap');
+  const createPreviewImg = document.getElementById('create-preview-img');
+  const createPreviewName = document.getElementById('create-preview-name');
+  const createPreviewSize = document.getElementById('create-preview-size');
+  const createRemoveBtn = document.getElementById('create-remove-file');
+
+  createDropzone?.addEventListener('click', (e) => {
+    if (e.target !== createRemoveBtn) {
+      createFileInput?.click();
+    }
+  });
+
+  createDropzone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    createDropzone.classList.add('drag-active');
+  });
+
+  createDropzone?.addEventListener('dragleave', () => {
+    createDropzone.classList.remove('drag-active');
+  });
+
+  createDropzone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    createDropzone.classList.remove('drag-active');
+    if (e.dataTransfer?.files.length && createFileInput) {
+      createFileInput.files = e.dataTransfer.files;
+      handleCreateFileChange();
+    }
+  });
+
+  createFileInput?.addEventListener('change', handleCreateFileChange);
+
+  function handleCreateFileChange() {
+    const file = createFileInput?.files?.[0];
+    if (file && createPreviewImg && createPreviewName && createPreviewSize) {
+      createPreviewName.textContent = file.name;
+      createPreviewSize.textContent = `${Math.round(file.size / 1024)} KB`;
+      createPreviewImg.src = URL.createObjectURL(file);
+      createPrompt?.classList.add('is-hidden');
+      createPreviewWrap?.classList.remove('is-hidden');
+    }
+  }
+
+  createRemoveBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (createFileInput) createFileInput.value = '';
+    createPrompt?.classList.remove('is-hidden');
+    createPreviewWrap?.classList.add('is-hidden');
+  });
+
+  // --- EDIT DROPZONE SETUP ---
+  const editDropzone = document.getElementById('edit-dropzone');
+  const editFileInput = document.getElementById('edit-file-input');
+  const editPrompt = document.getElementById('edit-prompt');
+  const editPreviewWrap = document.getElementById('edit-preview-wrap');
+  const editPreviewImg = document.getElementById('edit-preview-img');
+  const editPreviewName = document.getElementById('edit-preview-name');
+  const editRemoveBtn = document.getElementById('edit-remove-file');
+
+  editDropzone?.addEventListener('click', (e) => {
+    if (e.target !== editRemoveBtn) {
+      editFileInput?.click();
+    }
+  });
+
+  editFileInput?.addEventListener('change', () => {
+    const file = editFileInput?.files?.[0];
+    if (file && editPreviewImg && editPreviewName) {
+      editPreviewName.textContent = file.name;
+      editPreviewImg.src = URL.createObjectURL(file);
+      editPrompt?.classList.add('is-hidden');
+      editPreviewWrap?.classList.remove('is-hidden');
+    }
+  });
+
+  editRemoveBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (editFileInput) editFileInput.value = '';
+    editPrompt?.classList.remove('is-hidden');
+    editPreviewWrap?.classList.add('is-hidden');
+  });
+
+  // --- EDIT WORK SELECTOR ---
+  const workSelect = document.getElementById('edit-work-select');
+  const editForm = document.getElementById('edit-form');
+  const editWorkId = document.getElementById('edit-work-id');
+  const editCurrentImg = document.getElementById('edit-current-img');
+  const editTitle = document.getElementById('edit-title');
+  const editCategory = document.getElementById('edit-category');
+  const editDate = document.getElementById('edit-date');
+  const editClient = document.getElementById('edit-client');
+  const editTags = document.getElementById('edit-tags');
+  const editDesc = document.getElementById('edit-desc');
+  const editViewLink = document.getElementById('edit-view-link');
+
+  const editCards = document.querySelectorAll('.edit-select-card');
+
+  function selectWorkForEdit(id, shouldScroll = true) {
+    if (!id || !worksCatalog.has(id)) {
+      editForm?.classList.add('is-hidden');
+      editCards.forEach((c) => c.classList.remove('selected'));
+      if (workSelect) workSelect.value = '';
+      return;
+    }
+
+    if (workSelect && workSelect.value !== id) {
+      workSelect.value = id;
+    }
+
+    editCards.forEach((c) => {
+      if (c.dataset.id === id) {
+        c.classList.add('selected');
+      } else {
+        c.classList.remove('selected');
+      }
+    });
+
+    const work = worksCatalog.get(id);
+    if (!work) return;
+
+    if (editWorkId) editWorkId.value = work.id;
+    if (editCurrentImg) editCurrentImg.src = work.coverSrc;
+    if (editTitle) editTitle.value = work.title;
+    if (editCategory) editCategory.value = work.category;
+    if (editDate) editDate.value = work.date;
+    if (editClient) editClient.value = work.client;
+    if (editTags) editTags.value = Array.isArray(work.tags) ? work.tags.join(', ') : '';
+    if (editDesc) editDesc.value = work.body;
+
+    if (editViewLink) {
+      editViewLink.href = `/works/${work.id}`;
+      editViewLink.classList.remove('is-hidden');
+    }
+
+    if (editFileInput) editFileInput.value = '';
+    editPrompt?.classList.remove('is-hidden');
+    editPreviewWrap?.classList.add('is-hidden');
+
+    editForm?.classList.remove('is-hidden');
+    appendLog(`Loaded artwork "${work.title}" (${work.id}) for editing.`);
+
+    if (shouldScroll) {
+      editForm?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  editCards.forEach((card) => {
+    card.addEventListener('click', () => {
+      const id = card.dataset.id;
+      if (id) selectWorkForEdit(id, true);
+    });
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const id = card.dataset.id;
+        if (id) selectWorkForEdit(id, true);
+      }
+    });
+  });
+
+  workSelect?.addEventListener('change', () => {
+    selectWorkForEdit(workSelect.value, true);
+  });
+  workSelect?.addEventListener('input', () => {
+    selectWorkForEdit(workSelect.value, true);
+  });
+
+  // --- FORM SUBMIT: CREATE ---
+  const createForm = document.getElementById('create-form');
+  const createSubmitBtn = document.getElementById('create-submit-btn');
+
+  createForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!createSubmitBtn) return;
+
+    createSubmitBtn.disabled = true;
+    createSubmitBtn.textContent = 'SAVING & PROCESSING...';
+    appendLog('Submitting new artwork...');
+
+    try {
+      const formData = new FormData(createForm);
+      const res = await fetch('/api/admin/works', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || 'Failed to create artwork');
+      }
+
+      if (Array.isArray(data.logs)) {
+        data.logs.forEach((msg) => appendLog(msg));
+      }
+      appendLog(`SUCCESS: ${data.message}`);
+
+      // Reset form
+      createForm.reset();
+      createPrompt?.classList.remove('is-hidden');
+      createPreviewWrap?.classList.add('is-hidden');
+      alert(`Artwork ${data.workId} successfully added! Reloading page to update gallery...`);
+      window.location.reload();
+    } catch (err) {
+      appendLog(`ERROR: ${err.message}`, true);
+      alert(`Error: ${err.message}`);
+    } finally {
+      createSubmitBtn.disabled = false;
+      createSubmitBtn.textContent = 'SAVE & CREATE ARTWORK';
+    }
+  });
+
+  // --- FORM SUBMIT: EDIT ---
+  const editSubmitBtn = document.getElementById('edit-submit-btn');
+
+  editForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!editSubmitBtn) return;
+
+    editSubmitBtn.disabled = true;
+    editSubmitBtn.textContent = 'UPDATING...';
+    appendLog(`Submitting changes for ${editWorkId?.value}...`);
+
+    try {
+      const formData = new FormData(editForm);
+      const res = await fetch('/api/admin/works', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || 'Failed to update artwork');
+      }
+
+      if (Array.isArray(data.logs)) {
+        data.logs.forEach((msg) => appendLog(msg));
+      }
+      appendLog(`SUCCESS: ${data.message}`);
+      alert(`Artwork ${data.workId} updated successfully! Reloading page to reflect changes...`);
+      window.location.reload();
+    } catch (err) {
+      appendLog(`ERROR: ${err.message}`, true);
+      alert(`Error: ${err.message}`);
+    } finally {
+      editSubmitBtn.disabled = false;
+      editSubmitBtn.textContent = 'SAVE CHANGES';
+    }
+  });
+
+  // Clear Console
+  document.getElementById('console-clear-btn')?.addEventListener('click', () => {
+    if (logBox) logBox.innerHTML = '<span class="console-placeholder">Console cleared.</span>';
+  });
+</script>
+
+<style>
+  .admin-container {
+    max-width: 1200px;
+    width: 94%;
+    margin: 30px auto 80px auto;
+    font-family: inherit;
+    color: #222;
+  }
+
+  .admin-header {
+    margin-bottom: 24px;
+    border-bottom: 2px solid #222;
+    padding-bottom: 16px;
+  }
+
+  .header-badge {
+    display: inline-block;
+    background: #e65b33;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 2px 8px;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+
+  .admin-title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 4px 0;
+    letter-spacing: -0.01em;
+  }
+
+  .admin-sub {
+    font-size: 0.95rem;
+    color: #666;
+    margin: 0;
+  }
+
+  /* TABS */
+  .admin-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .tab-btn {
+    padding: 10px 20px;
+    background: #f5f5f5;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .tab-btn:hover {
+    background: #ebebeb;
+    color: #111;
+  }
+
+  .tab-btn.active {
+    background: #222;
+    color: #fff;
+    border-color: #222;
+  }
+
+  /* REORDER PANEL */
+  .reorder-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+
+  .section-heading {
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin: 0 0 4px 0;
+    letter-spacing: -0.01em;
+  }
+
+  .section-subtext {
+    font-size: 0.88rem;
+    color: #666;
+    margin: 0;
+  }
+
+  .submit-btn-accent {
+    padding: 10px 22px;
+    background: #37c13e;
+    color: #fff;
+    border: 1px solid #2da633;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .submit-btn-accent:hover:not(:disabled) {
+    background: #2ea734;
+    box-shadow: 0 2px 8px rgba(55, 193, 62, 0.4);
+  }
+
+  .submit-btn-accent:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .reorder-grid,
+  .edit-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 1024px) {
+    .reorder-grid,
+    .edit-selector-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .reorder-grid,
+    .edit-selector-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .reorder-card {
+    position: relative;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+  }
+
+  .reorder-card:hover {
+    border-color: #222;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  }
+
+  .reorder-card.is-dragging {
+    opacity: 0.35;
+    border: 2px dashed #37c13e;
+    cursor: grabbing;
+  }
+
+  .reorder-card.drag-over {
+    border-color: #37c13e;
+    transform: scale(1.02);
+  }
+
+  .reorder-rank-badge {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    background: #222;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    letter-spacing: 0.04em;
+    z-index: 2;
+  }
+
+  .reorder-thumb-wrap {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: #f0f0f0;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #eee;
+  }
+
+  .reorder-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+
+  .reorder-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .reorder-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #111;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .reorder-id {
+    font-size: 0.75rem;
+    color: #777;
+    font-family: monospace;
+  }
+
+  .reorder-cat {
+    align-self: flex-start;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 1px 6px;
+    border: 1px solid;
+    margin-top: 2px;
+  }
+
+  .reorder-handle {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ccc;
+    padding: 3px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    cursor: grab;
+    z-index: 2;
+  }
+
+  .reorder-card:hover .reorder-handle {
+    color: #222;
+    border-color: #999;
+  }
+
+  .reorder-bottom-bar {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 14px;
+    border-top: 1px dashed #ccc;
+  }
+
+  /* EDIT SELECTOR CARDS */
+  .edit-section-header {
+    margin-bottom: 12px;
+  }
+
+  .edit-select-card {
+    position: relative;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .edit-select-card:hover {
+    border-color: #222;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .edit-select-card.selected {
+    border: 2px solid #37c13e;
+    background: #f4fff4;
+    box-shadow: 0 4px 14px rgba(55, 193, 62, 0.25);
+  }
+
+  .edit-select-thumb-wrap {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: #f0f0f0;
+    overflow: hidden;
+    border: 1px solid #eee;
+  }
+
+  .edit-select-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .edit-select-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .edit-select-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #111;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .edit-select-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .edit-select-id {
+    font-size: 0.75rem;
+    color: #777;
+    font-family: monospace;
+  }
+
+  /* PANELS & FORMS */
+  .admin-panel {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 24px;
+    margin-bottom: 30px;
+  }
+
+  .admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 640px) {
+    .form-grid-2 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-label {
+    font-size: 0.88rem;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    padding: 9px 12px;
+    border: 1px solid #ccc;
+    background: #fafafa;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: #111;
+    border-radius: 0;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .form-input:focus,
+  .form-select:focus,
+  .form-textarea:focus {
+    outline: none;
+    border-color: #222;
+    background: #fff;
+  }
+
+  /* DROPZONE */
+  .dropzone {
+    border: 2px dashed #bbb;
+    background: #fafafa;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+
+  .dropzone:hover,
+  .dropzone.drag-active {
+    border-color: #37c13e;
+    background: #f0fff0;
+  }
+
+  .file-input-hidden {
+    display: none;
+  }
+
+  .dropzone-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .dropzone-icon {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #666;
+  }
+
+  .dropzone-text {
+    font-weight: bold;
+    font-size: 0.95rem;
+  }
+
+  .dropzone-hint {
+    font-size: 0.8rem;
+    color: #888;
+  }
+
+  .preview-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-align: left;
+  }
+
+  .preview-thumb {
+    width: 90px;
+    height: 70px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    background: #fff;
+  }
+
+  .preview-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .preview-name {
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+
+  .preview-size {
+    font-size: 0.8rem;
+    color: #666;
+  }
+
+  .btn-text-danger {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #d32f2f;
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  /* EDIT COVER ROW */
+  .edit-cover-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .current-cover-box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .cover-box-label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #666;
+  }
+
+  .edit-thumb {
+    width: 130px;
+    height: 100px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+  }
+
+  /* CHECKBOX */
+  .form-checkbox-wrap {
+    padding: 10px 14px;
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+
+  .checkbox-label input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+
+  /* BUTTONS */
+  .submit-btn {
+    padding: 12px 24px;
+    background: #222;
+    color: #fff;
+    border: 1px solid #222;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .submit-btn:hover:not(:disabled) {
+    background: #37c13e;
+    border-color: #37c13e;
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .form-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .preview-btn {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #0b63b6;
+    text-decoration: none;
+  }
+
+  .preview-btn:hover {
+    text-decoration: underline;
+  }
+
+  .select-work-bar {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed #ccc;
+  }
+
+  .select-work-input {
+    width: 100%;
+    margin-top: 6px;
+  }
+
+  /* CONSOLE SECTION */
+  .console-section {
+    border: 1px solid #333;
+    background: #1e1e1e;
+    color: #eee;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85rem;
+  }
+
+  .console-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #2d2d2d;
+    padding: 8px 14px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #444;
+  }
+
+  .console-clear {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+
+  .console-clear:hover {
+    color: #fff;
+  }
+
+  .console-body {
+    padding: 12px 14px;
+    max-height: 220px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .console-line {
+    line-height: 1.4;
+    word-break: break-all;
+  }
+
+  .console-error {
+    color: #ff6b6b;
+  }
+
+  .console-placeholder {
+    color: #666;
+  }
+
+  .is-hidden {
+    display: none !important;
+  }
+</style>
