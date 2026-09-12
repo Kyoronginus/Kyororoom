@@ -90,8 +90,10 @@ export default function PatreonBlog({ initialPosts }: { initialPosts?: PatreonPo
                   src={post.thumbnail!}
                   alt=""
                   className="blog-thumb-img"
-                  referrerPolicy="no-referrer"
+                  width={64}
+                  height={44}
                   loading="lazy"
+                  decoding="async"
                   onError={() => setImgErrors((prev) => ({ ...prev, [post.id]: true }))}
                 />
               ) : (

@@ -195,9 +195,12 @@ export async function fetchLatestPosts(forceRefresh = false): Promise<PatreonPos
           null;
       }
 
-      // Ensure &amp; is cleaned from URL query strings
+      // Ensure &amp; is cleaned from URL query strings and proxy external CDN URLs
       if (thumb) {
         thumb = thumb.replace(/&amp;/g, '&');
+        if (thumb.startsWith('http://') || thumb.startsWith('https://')) {
+          thumb = `/api/patreon/image?url=${encodeURIComponent(thumb)}`;
+        }
       }
 
       return {
