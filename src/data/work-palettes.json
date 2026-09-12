@@ -1,0 +1,86 @@
+{
+  "1": {
+    "accent": "rgb(70, 154, 228)",
+    "glow": "rgba(70, 154, 228, 0.22)"
+  },
+  "2": {
+    "accent": "rgb(64, 125, 118)",
+    "glow": "rgba(64, 125, 118, 0.22)"
+  },
+  "commission/1": {
+    "accent": "rgb(4, 89, 80)",
+    "glow": "rgba(4, 89, 80, 0.22)"
+  },
+  "commission/2": {
+    "accent": "rgb(201, 160, 150)",
+    "glow": "rgba(201, 160, 150, 0.22)"
+  },
+  "commission/3": {
+    "accent": "rgb(132, 98, 139)",
+    "glow": "rgba(132, 98, 139, 0.22)"
+  },
+  "commission/4": {
+    "accent": "rgb(134, 154, 180)",
+    "glow": "rgba(134, 154, 180, 0.22)"
+  },
+  "commission/5": {
+    "accent": "rgb(167, 152, 140)",
+    "glow": "rgba(167, 152, 140, 0.22)"
+  },
+  "commission/6": {
+    "accent": "rgb(74, 66, 119)",
+    "glow": "rgba(74, 66, 119, 0.22)"
+  },
+  "commission/7": {
+    "accent": "rgb(205, 154, 162)",
+    "glow": "rgba(205, 154, 162, 0.22)"
+  },
+  "commission/8": {
+    "accent": "rgb(160, 164, 137)",
+    "glow": "rgba(160, 164, 137, 0.22)"
+  },
+  "commission/9": {
+    "accent": "rgb(199, 137, 165)",
+    "glow": "rgba(199, 137, 165, 0.22)"
+  },
+  "fanart/1": {
+    "accent": "rgb(16, 21, 54)",
+    "glow": "rgba(16, 21, 54, 0.22)"
+  },
+  "fanart/2": {
+    "accent": "rgb(119, 75, 35)",
+    "glow": "rgba(119, 75, 35, 0.22)"
+  },
+  "fanart/3": {
+    "accent": "rgb(149, 92, 81)",
+    "glow": "rgba(149, 92, 81, 0.22)"
+  },
+  "oc/1": {
+    "accent": "rgb(189, 116, 58)",
+    "glow": "rgba(189, 116, 58, 0.22)"
+  },
+  "oc/agnia/1": {
+    "accent": "rgb(107, 48, 28)",
+    "glow": "rgba(107, 48, 28, 0.22)"
+  },
+  "oc/agnia/2": {
+    "accent": "rgb(230, 91, 51)",
+    "glow": "rgba(230, 91, 51, 0.22)"
+  },
+  "oc/venna/1": {
+    "accent": "rgb(163, 159, 190)",
+    "glow": "rgba(163, 159, 190, 0.22)"
+  },
+  "oc/venna/2": {
+    "accent": "rgb(214, 180, 171)",
+    "glow": "rgba(214, 180, 171, 0.22)"
+  },
+  "oc/venna/3": {
+    "accent": "rgb(126, 179, 185)",
+    "glow": "rgba(126, 179, 185, 0.22)"
+  },
+  "oc/venna/4": {
+    "accent": "rgb(153, 164, 173)",
+    "glow": "rgba(153, 164, 173, 0.22)"
+  }
+}

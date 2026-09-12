@@ -25,15 +25,10 @@ const commissionCount = allWorks.filter((w) => w.data.category === 'commission')
 const works = limit ? allWorks.slice(0, limit) : allWorks;
 
 // Extract dominant accent color per artwork for dynamic hover glow & border
-const worksWithColors = await Promise.all(
-  works.map(async (work) => {
-    const colors = await getWorkAccentColor(work.id);
-    return {
-      ...work,
-      colors,
-    };
-  })
-);
+const worksWithColors = works.map((work) => ({
+  ...work,
+  colors: getWorkAccentColor(work.id),
+}));
 ---
 
 <div class="works-container">
@@ -87,7 +82,7 @@ const worksWithColors = await Promise.all(
         <a
           href={`/works/${work.id}`}
           class="work-card"
-          style={`--card-accent: ${work.colors.accent};`}
+          style={`--card-accent: ${work.colors.accent}; --card-glow: ${work.colors.glow};`}
           data-category={work.data.category}
           aria-label={displayTitle}
         >
@@ -187,13 +182,14 @@ const worksWithColors = await Promise.all(
     text-decoration: none;
     color: inherit;
     overflow: hidden;
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     animation: cardEntrance 0.3s ease-out;
   }
 
   .work-card:hover {
     transform: translateY(-3px);
     border-color: var(--card-accent, #333);
+    box-shadow: 0 4px 14px var(--card-glow, rgba(0, 0, 0, 0.08));
   }
 
   .is-hidden {

@@ -6,8 +6,8 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "predev": "node scripts/optimize-carousel.mjs",
-    "prebuild": "node scripts/optimize-carousel.mjs",
+    "predev": "node scripts/optimize-carousel.mjs && node scripts/generate-palettes.mjs",
+    "prebuild": "node scripts/optimize-carousel.mjs && node scripts/generate-palettes.mjs",
     "optimize:hero": "node scripts/optimize-carousel.mjs",
     "dev": "astro dev",
     "build": "astro build",
