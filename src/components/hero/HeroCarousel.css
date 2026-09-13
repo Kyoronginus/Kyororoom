@@ -4,6 +4,7 @@
   padding: 20px 0;
   overflow: hidden;
   background: transparent;
+  min-height: 440px;
 }
 
 .hero-carousel-track {
@@ -15,12 +16,9 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
   user-select: none;
-  opacity: 0;
-  transition: opacity 0.25s ease;
 }
 
 .hero-carousel-track.is-ready {
-  opacity: 1;
   scroll-snap-type: x mandatory;
 }
 

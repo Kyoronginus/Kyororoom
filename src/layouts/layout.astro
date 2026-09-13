@@ -54,7 +54,20 @@ const ogImageUrl = new URL(image, siteUrl).href;
     <!-- Fonts & Preloads -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" />
+    </noscript>
     <link rel="preload" as="image" href="/assets/Hero/Carousel/6.webp" type="image/webp" fetchpriority="high" />
   </head>
   <body class="bg-transparent text-spotify-textMain font-sans antialiased">

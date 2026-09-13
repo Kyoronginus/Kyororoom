@@ -140,8 +140,8 @@ export default function HeroCarousel() {
         onMouseLeave={handleMouseUp}
       >
         {TRIPLE_IMAGES.map((src, index) => {
-          // Middle set items (index images.length to images.length + 3) are visible initially
-          const isInitialVisible = index >= images.length && index < images.length + 3;
+          const isLcp = index === 0;
+          const isInitialEager = index < 3;
           return (
             <div
               key={index}
@@ -154,8 +154,10 @@ export default function HeroCarousel() {
                 draggable="false"
                 width={300}
                 height={400}
-                loading={isInitialVisible ? 'eager' : 'lazy'}
-                decoding={isInitialVisible ? 'sync' : 'async'}
+                loading={isInitialEager ? 'eager' : 'lazy'}
+                decoding={isLcp ? 'sync' : 'async'}
+                // @ts-ignore
+                fetchpriority={isLcp ? 'high' : undefined}
               />
             </div>
           );

@@ -60,10 +60,10 @@ for (const file of files) {
     }
   }
 
-  // Optimize with Sharp: max height 800px (retina 2x for 400px carousel), quality 85 webp
+  // Optimize with Sharp: max height 750px (nearly 2x for 400px carousel), quality 78 webp
   await sharp(inputPath)
-    .resize({ height: 800, withoutEnlargement: true })
-    .webp({ quality: 85 })
+    .resize({ height: 750, withoutEnlargement: true })
+    .webp({ quality: 78, effort: 5 })
     .toFile(outputPath);
 
   const outputStat = fs.statSync(outputPath);
