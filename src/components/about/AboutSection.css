@@ -33,10 +33,22 @@
         transition: background-color 0.2s, color 0.2s, border-color 0.2s;
     }
 
-    .badge-btn:hover {
+    .badge-btn:hover,
+    .badge-btn.badge-open:hover {
         background-color: #37c13e;
         color: #fff;
         border-color: #37c13e;
+    }
+
+    .badge-btn.badge-closed {
+        color: #666;
+        border-color: #ccc;
+    }
+
+    .badge-btn.badge-closed:hover {
+        background-color: #dc2626;
+        color: #fff;
+        border-color: #dc2626;
     }
 
     .about-social-badges {

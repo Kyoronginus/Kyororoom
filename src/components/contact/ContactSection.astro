@@ -1,6 +1,7 @@
 ---
 // src/components/contact/ContactSection.astro
 import VisitorCounter from './VisitorCounter.tsx';
+import { siteConfig } from '../../config/site';
 import './ContactSection.css';
 
 interface Props {
@@ -8,12 +9,12 @@ interface Props {
 }
 
 const { initialViews } = Astro.props;
+const { commissions } = siteConfig;
 ---
 
 <section id="contact">
   <h1>CONTACTS</h1>
 
-  <!-- Commission Subsection -->
   <!-- Commission Subsection -->
   <div class="commission-panel" data-lang="en">
     <div class="commission-header-row">
@@ -24,15 +25,24 @@ const { initialViews } = Astro.props;
           <button type="button" class="comm-lang-btn" data-lang-btn="ja" aria-pressed="false">JP</button>
         </div>
       </div>
-      <span class="commission-status-badge">
-        <span class="lang-en">COMMISSION STATUS: OPEN</span>
-        <span class="lang-ja">COMMISSION STATUS: OPEN</span>
+      <span class={`commission-status-badge ${commissions.isOpen ? 'open' : 'closed'}`}>
+        <span class="lang-en">COMMISSION STATUS: {commissions.statusLabel}</span>
+        <span class="lang-ja">COMMISSION STATUS: {commissions.statusLabel}</span>
       </span>
     </div>
 
     <p class="commission-intro">
-      <span class="lang-en">Accepting commissions for character illustrations and original artwork.</span>
-      <span class="lang-ja">キャラクターイラストやオリジナル作品の個人・商業依頼を受け付けております。</span>
+      {commissions.isOpen ? (
+        <>
+          <span class="lang-en">Accepting commissions for character illustrations and original artwork.</span>
+          <span class="lang-ja">キャラクターイラストやオリジナル作品の個人・商業依頼を受け付けております。</span>
+        </>
+      ) : (
+        <>
+          <span class="lang-en">Personal commissions are currently closed. Feel free to check back later or send business inquiries below.</span>
+          <span class="lang-ja">現在、個人様向けのご依頼受付を一時停止しております。再開までお待ちいただくか、商業案件は下記よりご相談ください。</span>
+        </>
+      )}
     </p>
 
     <div class="commission-channels">
@@ -47,19 +57,39 @@ const { initialViews } = Astro.props;
             <span class="lang-ja">個人様向けご依頼</span>
           </h4>
           <p class="channel-desc">
-            <span class="lang-en">Submit your request directly via Google Form.</span>
-            <span class="lang-ja">Googleフォームより直接ご依頼・ご相談いただけます。</span>
+            {commissions.isOpen ? (
+              <>
+                <span class="lang-en">Submit your request directly via Google Form.</span>
+                <span class="lang-ja">Googleフォームより直接ご依頼・ご相談いただけます。</span>
+              </>
+            ) : (
+              <>
+                <span class="lang-en">Requests are temporarily closed. Please check back later!</span>
+                <span class="lang-ja">現在受付を停止しております。再開をお待ちください。</span>
+              </>
+            )}
           </p>
         </div>
-        <a
-          href="https://docs.google.com/forms/d/e/1FAIpQLSdlij7_gfc9gt1PeVf7we4nzIGEvwi5f6pdD3JWp8cpL_AlzA/viewform?usp=sharing&ouid=101127023819410763660"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="channel-btn"
-        >
-          <span class="lang-en">OPEN FORM</span>
-          <span class="lang-ja">OPEN FORM</span>
-        </a>
+        {commissions.isOpen ? (
+          <a
+            href={commissions.formUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="channel-btn"
+          >
+            <span class="lang-en">OPEN FORM</span>
+            <span class="lang-ja">OPEN FORM</span>
+          </a>
+        ) : (
+          <button
+            type="button"
+            class="channel-btn disabled"
+            disabled
+          >
+            <span class="lang-en">CURRENTLY CLOSED</span>
+            <span class="lang-ja">CURRENTLY CLOSED</span>
+          </button>
+        )}
       </div>
 
       <div class="channel-card">

@@ -3,6 +3,7 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/layout.astro';
 import { sortWorks } from '../utils/works';
+import commissionsData from '../data/commissions.json';
 
 // Strict production guard: disable in production
 if (import.meta.env.PROD) {
@@ -43,6 +44,9 @@ const today = new Date().toISOString().split('T')[0];
       </button>
       <button type="button" class="tab-btn" id="tab-btn-edit" data-tab="edit">
         EDIT EXISTING ({allWorks.length})
+      </button>
+      <button type="button" class="tab-btn" id="tab-btn-commission" data-tab="commission">
+        COMMISSION STATUS ({commissionsData.statusLabel})
       </button>
     </div>
 
@@ -333,6 +337,130 @@ const today = new Date().toISOString().split('T')[0];
       </form>
     </section>
 
+    <!-- COMMISSION STATUS PANEL -->
+    <section id="panel-commission" class="admin-panel is-hidden">
+      <div class="edit-section-header">
+        <div>
+          <h2 class="section-heading">COMMISSION STATUS &amp; FORM SETTINGS</h2>
+          <p class="section-subtext">Toggle commission availability on or off. The Ticker, About section, and Contacts section will immediately reflect the status.</p>
+        </div>
+      </div>
+
+      <div class="commission-admin-card">
+        <!-- Live Status Bar -->
+        <div class="commission-status-top">
+          <div class="commission-current-state">
+            <span class="status-label-heading">Current Website Status:</span>
+            <span id="comm-live-badge" class={`admin-status-badge ${commissionsData.isOpen ? 'open' : 'closed'}`}>
+              <span class="status-indicator-dot"></span>
+              <span id="comm-live-badge-text">{commissionsData.statusLabel}</span>
+            </span>
+          </div>
+
+          <div class="toggle-control-group">
+            <label class="toggle-switch">
+              <input type="checkbox" id="comm-is-open-input" checked={commissionsData.isOpen} />
+              <span class="toggle-slider"></span>
+            </label>
+            <span id="comm-toggle-text" class="toggle-label-text">
+              {commissionsData.isOpen ? 'Commissions are currently OPEN' : 'Commissions are currently CLOSED'}
+            </span>
+          </div>
+        </div>
+
+        <form id="commission-form" class="admin-form" style="margin-top: 24px;">
+          <div class="form-grid-2">
+            <!-- Status Label Text -->
+            <div class="form-group">
+              <label class="form-label" for="comm-status-label-input">Status Label (Header / Badge)</label>
+              <input
+                type="text"
+                id="comm-status-label-input"
+                name="statusLabel"
+                value={commissionsData.statusLabel}
+                placeholder="OPEN or CLOSED"
+                class="form-input"
+                required
+              />
+              <span class="form-hint">Displayed in Ticker and Badges (e.g. "OPEN", "CLOSED", "WAITLIST")</span>
+            </div>
+
+            <!-- Email Inquiries -->
+            <div class="form-group">
+              <label class="form-label" for="comm-email-input">Business Inquiries Email</label>
+              <input
+                type="email"
+                id="comm-email-input"
+                name="email"
+                value={commissionsData.email}
+                class="form-input"
+                required
+              />
+              <span class="form-hint">Address for commercial project inquiries</span>
+            </div>
+          </div>
+
+          <!-- Form URL -->
+          <div class="form-group">
+            <label class="form-label" for="comm-form-url-input">Google Form URL (Personal Commissions)</label>
+            <input
+              type="url"
+              id="comm-form-url-input"
+              name="formUrl"
+              value={commissionsData.formUrl}
+              placeholder="https://docs.google.com/forms/d/e/..."
+              class="form-input"
+              required
+            />
+            <span class="form-hint">Target link when clicking "OPEN FORM" on the website</span>
+          </div>
+
+          <!-- Live Preview Box -->
+          <div class="commission-preview-box">
+            <span class="preview-box-title">Live Website Previews:</span>
+            <div class="preview-items-row">
+              <div class="preview-item">
+                <span class="preview-item-sub">Ticker Message:</span>
+                <span id="preview-ticker-msg" class="preview-ticker-pill">
+                  [COMMISSIONS: {commissionsData.statusLabel}]
+                </span>
+              </div>
+              <div class="preview-item">
+                <span class="preview-item-sub">About Badge:</span>
+                <span id="preview-about-badge" class={`preview-about-pill ${commissionsData.isOpen ? 'open' : 'closed'}`}>
+                  COMMISSION STATUS: {commissionsData.statusLabel}
+                </span>
+              </div>
+              <div class="preview-item">
+                <span class="preview-item-sub">Contact Form Button:</span>
+                <span id="preview-contact-btn" class={`preview-contact-pill ${commissionsData.isOpen ? 'open' : 'closed'}`}>
+                  {commissionsData.isOpen ? 'OPEN FORM' : 'CURRENTLY CLOSED'}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Auto deploy checkbox -->
+          <div class="form-checkbox-wrap" style="margin-top: 20px;">
+            <label class="checkbox-label">
+              <input type="checkbox" id="comm-autodeploy" name="autoDeploy" value="true" checked />
+              <span class="checkbox-custom"></span>
+              <span><strong>Auto-Deploy:</strong> Commit status changes and push to GitHub (triggers Vercel build)</span>
+            </label>
+          </div>
+
+          <div class="form-actions-row">
+            <button type="submit" class="submit-btn-accent" id="comm-submit-btn">
+              SAVE COMMISSION STATUS
+            </button>
+            <a href="/#contact" target="_blank" class="preview-btn">
+              VIEW CONTACT SECTION &rarr;
+            </a>
+          </div>
+        </form>
+      </div>
+    </section>
+
     <!-- LIVE CONSOLE LOGS -->
     <section class="console-section">
       <div class="console-header">
@@ -365,11 +493,12 @@ const today = new Date().toISOString().split('T')[0];
     logBox.scrollTop = logBox.scrollHeight;
   }
 
-  // --- TABS TOGGLE (3 tabs) ---
+  // --- TABS TOGGLE (4 tabs) ---
   const tabConfigs = [
     { btn: document.getElementById('tab-btn-reorder'), panel: document.getElementById('panel-reorder') },
     { btn: document.getElementById('tab-btn-create'), panel: document.getElementById('panel-create') },
     { btn: document.getElementById('tab-btn-edit'), panel: document.getElementById('panel-edit') },
+    { btn: document.getElementById('tab-btn-commission'), panel: document.getElementById('panel-commission') },
   ];
 
   tabConfigs.forEach(({ btn, panel }) => {
@@ -747,6 +876,106 @@ const today = new Date().toISOString().split('T')[0];
     } finally {
       editSubmitBtn.disabled = false;
       editSubmitBtn.textContent = 'SAVE CHANGES';
+    }
+  });
+
+  // --- COMMISSION STATUS LOGIC ---
+  const commIsOpenInput = document.getElementById('comm-is-open-input');
+  const commStatusLabelInput = document.getElementById('comm-status-label-input');
+  const commToggleText = document.getElementById('comm-toggle-text');
+  const commLiveBadge = document.getElementById('comm-live-badge');
+  const commLiveBadgeText = document.getElementById('comm-live-badge-text');
+  const tabBtnCommission = document.getElementById('tab-btn-commission');
+  const previewTickerMsg = document.getElementById('preview-ticker-msg');
+  const previewAboutBadge = document.getElementById('preview-about-badge');
+  const previewContactBtn = document.getElementById('preview-contact-btn');
+  const commissionForm = document.getElementById('commission-form');
+  const commSubmitBtn = document.getElementById('comm-submit-btn');
+
+  function syncCommissionPreview() {
+    const isOpen = commIsOpenInput?.checked ?? true;
+    const label = (commStatusLabelInput?.value || (isOpen ? 'OPEN' : 'CLOSED')).trim().toUpperCase();
+
+    if (commToggleText) {
+      commToggleText.textContent = isOpen ? 'Commissions are currently OPEN' : 'Commissions are currently CLOSED';
+    }
+    if (commLiveBadge) {
+      commLiveBadge.className = `admin-status-badge ${isOpen ? 'open' : 'closed'}`;
+    }
+    if (commLiveBadgeText) {
+      commLiveBadgeText.textContent = label;
+    }
+    if (previewTickerMsg) {
+      previewTickerMsg.textContent = `[COMMISSIONS: ${label}]`;
+    }
+    if (previewAboutBadge) {
+      previewAboutBadge.className = `preview-about-pill ${isOpen ? 'open' : 'closed'}`;
+      previewAboutBadge.textContent = `COMMISSION STATUS: ${label}`;
+    }
+    if (previewContactBtn) {
+      previewContactBtn.className = `preview-contact-pill ${isOpen ? 'open' : 'closed'}`;
+      previewContactBtn.textContent = isOpen ? 'OPEN FORM' : 'CURRENTLY CLOSED';
+    }
+  }
+
+  commIsOpenInput?.addEventListener('change', () => {
+    const isOpen = commIsOpenInput.checked;
+    if (commStatusLabelInput) {
+      if (isOpen && (commStatusLabelInput.value === 'CLOSED' || !commStatusLabelInput.value)) {
+        commStatusLabelInput.value = 'OPEN';
+      } else if (!isOpen && (commStatusLabelInput.value === 'OPEN' || !commStatusLabelInput.value)) {
+        commStatusLabelInput.value = 'CLOSED';
+      }
+    }
+    syncCommissionPreview();
+  });
+
+  commStatusLabelInput?.addEventListener('input', syncCommissionPreview);
+
+  commissionForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!commSubmitBtn) return;
+
+    commSubmitBtn.disabled = true;
+    commSubmitBtn.textContent = 'SAVING...';
+    appendLog('Sending commission update request to /api/admin/commission...');
+
+    try {
+      const payload = {
+        isOpen: commIsOpenInput?.checked ?? true,
+        statusLabel: commStatusLabelInput?.value || (commIsOpenInput?.checked ? 'OPEN' : 'CLOSED'),
+        formUrl: document.getElementById('comm-form-url-input')?.value || '',
+        email: document.getElementById('comm-email-input')?.value || '',
+        autoDeploy: document.getElementById('comm-autodeploy')?.checked ?? false,
+      };
+
+      const res = await fetch('/api/admin/commission', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to update commission status.');
+      }
+
+      if (data.logs && Array.isArray(data.logs)) {
+        data.logs.forEach((log) => appendLog(log));
+      }
+
+      appendLog(`✓ ${data.message}`);
+      if (tabBtnCommission) {
+        tabBtnCommission.textContent = `COMMISSION STATUS (${data.commissions.statusLabel})`;
+      }
+      syncCommissionPreview();
+      alert(`Commission status successfully updated to ${data.commissions.statusLabel}!`);
+    } catch (err) {
+      appendLog(`ERROR: ${err.message}`, true);
+      alert(`Error: ${err.message}`);
+    } finally {
+      commSubmitBtn.disabled = false;
+      commSubmitBtn.textContent = 'SAVE COMMISSION STATUS';
     }
   });
 
@@ -1382,5 +1611,209 @@ const today = new Date().toISOString().split('T')[0];
 
   .is-hidden {
     display: none !important;
+  }
+
+  /* Commission Status Admin Styles */
+  .commission-admin-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 24px;
+    margin-top: 16px;
+  }
+
+  .commission-status-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .commission-current-state {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .status-label-heading {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #555;
+  }
+
+  .admin-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    border-radius: 9999px;
+  }
+
+  .admin-status-badge.open {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+  }
+
+  .admin-status-badge.closed {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+  }
+
+  .status-indicator-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .admin-status-badge.open .status-indicator-dot {
+    background: #10b981;
+  }
+
+  .admin-status-badge.closed .status-indicator-dot {
+    background: #ef4444;
+  }
+
+  .toggle-control-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 28px;
+  }
+
+  .toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.3s;
+    border-radius: 28px;
+  }
+
+  .toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+  }
+
+  .toggle-switch input:checked + .toggle-slider {
+    background-color: #10b981;
+  }
+
+  .toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+  }
+
+  .toggle-label-text {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #111;
+  }
+
+  .form-hint {
+    display: block;
+    font-size: 0.75rem;
+    color: #777;
+    margin-top: 4px;
+  }
+
+  .commission-preview-box {
+    margin-top: 20px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    padding: 16px;
+  }
+
+  .preview-box-title {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #4b5563;
+    margin-bottom: 12px;
+  }
+
+  .preview-items-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .preview-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .preview-item-sub {
+    font-size: 0.7rem;
+    color: #6b7280;
+    text-transform: uppercase;
+  }
+
+  .preview-ticker-pill {
+    display: inline-block;
+    background: #000;
+    color: #fff;
+    font-size: 0.75rem;
+    font-family: monospace;
+    padding: 4px 8px;
+  }
+
+  .preview-about-pill {
+    display: inline-block;
+    background: #fff;
+    border: 1px solid #ccc;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 4px 8px;
+    color: #222;
+  }
+
+  .preview-about-pill.closed {
+    color: #666;
+  }
+
+  .preview-contact-pill {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    background: #222;
+    color: #fff;
+  }
+
+  .preview-contact-pill.closed {
+    background: #9ca3af;
+    color: #fff;
   }
 </style>

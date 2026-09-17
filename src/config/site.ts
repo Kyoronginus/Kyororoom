@@ -1,3 +1,5 @@
+import commissionsData from '../data/commissions.json';
+
 export interface SiteConfig {
   commissions: {
     isOpen: boolean;
@@ -9,12 +11,7 @@ export interface SiteConfig {
 }
 
 export const siteConfig: SiteConfig = {
-  commissions: {
-    isOpen: true,
-    statusLabel: 'OPEN',
-    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSdlij7_gfc9gt1PeVf7we4nzIGEvwi5f6pdD3JWp8cpL_AlzA/viewform?usp=sharing&ouid=101127023819410763660',
-    email: 'kyoronginus@gmail.com',
-  },
+  commissions: commissionsData,
   announcements: [
     'My new personal website!',
   ],

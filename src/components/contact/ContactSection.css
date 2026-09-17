@@ -80,6 +80,12 @@
   background: #f4faf5;
 }
 
+.commission-status-badge.closed {
+  color: #dc2626;
+  border-color: #dc2626;
+  background: #fef2f2;
+}
+
 .commission-intro {
   margin: 0;
   color: #555;
@@ -108,15 +114,24 @@
   border-color: #333;
 }
 
+.channel-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .channel-tag {
+  align-self: flex-start;
   font-size: 0.7rem;
   font-weight: bold;
   letter-spacing: 0.08em;
-  color: #888;
+  color: #666;
+  background: #e8e8e8;
+  padding: 2px 6px;
 }
 
 .channel-heading {
-  margin: 4px 0 6px 0;
+  margin: 0;
   font-size: 1.05rem;
   font-weight: bold;
   color: #111;
@@ -142,10 +157,23 @@
   letter-spacing: 0.05em;
   transition: background-color 0.2s ease;
   align-self: flex-start;
+  font-family: inherit;
+  border: none;
 }
 
 .channel-btn:hover {
   background: #37c13e;
+}
+
+.channel-btn.disabled {
+  background: #9ca3af;
+  color: #fff;
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.channel-btn.disabled:hover {
+  background: #9ca3af;
 }
 
 /* Foldable FAQ Accordion */
@@ -204,9 +232,12 @@
 }
 
 .faq-item[open] .faq-question::after {
-  content: '−';
+  content: '+';
+  transform: rotate(45deg);
   color: #111;
 }
+
+
 
 .faq-question:hover {
   background: #f9f9f9;

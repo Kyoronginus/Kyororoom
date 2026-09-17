@@ -29,7 +29,7 @@ const discordId = import.meta.env.DISCORD_ID;
           <div><span style="font-style:italic">master of none</span></div>
         </div>
       </div>
-      <button class="badge-btn">COMMISSION STATUS: {siteConfig.commissions.statusLabel}</button>
+      <a href="#contact" class={`badge-btn ${siteConfig.commissions.isOpen ? 'badge-open' : 'badge-closed'}`}>COMMISSION STATUS: {siteConfig.commissions.statusLabel}</a>
       <div class="about-social-badges">
         <a href="https://x.com/kyoro_ina" target="_blank" rel="noopener noreferrer" class="badge-btn social-icon-btn" title="X (Twitter)" aria-label="X">
           <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
