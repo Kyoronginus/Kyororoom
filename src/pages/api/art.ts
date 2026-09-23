@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 
-const USER_ID = import.meta.env.OEKAKUSA_USER_ID;
 const API_URL = import.meta.env.OEKAKUSA_API_URL;
+const API_KEY = import.meta.env.OEKAKUSA_API_KEY;
 
 let cachedData: any = null;
 let cacheExpiresAt = 0;
@@ -20,7 +20,11 @@ export const GET: APIRoute = async () => {
   }
 
   try {
-    const res = await fetch(API_URL);
+    const res = await fetch(API_URL, {
+      headers: {
+        'x-api-key': API_KEY || '',
+      },
+    });
     if (!res.ok) {
       if (cachedData) {
         return new Response(JSON.stringify(cachedData), {

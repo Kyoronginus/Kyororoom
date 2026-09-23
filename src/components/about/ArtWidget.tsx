@@ -60,8 +60,7 @@ export default function ArtWidget() {
       try {
         let res = await fetch('/api/art');
         if (!res.ok) {
-          // Direct fallback if proxy has an issue
-          res = await fetch('https://us-central1-oekakusa.cloudfunctions.net/api/users/NC9InoxB7HdZY6zSiKkNjaOc5Lc2/commits/latest');
+
         }
 
         if (res.ok) {
